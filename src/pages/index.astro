@@ -42,6 +42,16 @@ const featured = projects
           </div>
         </div>
         <div class="flex-shrink-0 self-center">
+          {/* Static logo in light mode */}
+          <img
+            src={`${base}/images/logo/logo-square-transparent.avif`}
+            alt=""
+            aria-hidden="true"
+            width="340"
+            height="340"
+            class="dark:hidden"
+          />
+          {/* Animated video in dark mode */}
           <video
             src={`${base}/images/about/logo-video.mp4`}
             width="340"
@@ -50,7 +60,7 @@ const featured = projects
             muted
             playsinline
             aria-hidden="true"
-            class="mix-blend-multiply dark:mix-blend-screen"
+            class="hidden mix-blend-screen dark:block"
           />
         </div>
       </div>
