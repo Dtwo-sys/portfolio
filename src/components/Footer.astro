@@ -11,12 +11,20 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
       <div class="max-w-sm">
         <a href={`${base}/`} class="inline-block" aria-label="Calibrated Ideas, home">
+          {/* Brand colour in both modes: navy lockup on light, lighter blue on dark. */}
           <img
             src={`${base}/images/logo/d2-logo-transparent.webp`}
             alt="D² Calibrated Ideas"
             width="180"
             height="60"
-            class="dark:brightness-0 dark:invert"
+            class="dark:hidden"
+          />
+          <img
+            src={`${base}/images/logo/d2-logo-transparent-dark.webp`}
+            alt="D² Calibrated Ideas"
+            width="180"
+            height="60"
+            class="hidden dark:block"
           />
         </a>
         <p class="mt-3 text-sm text-[var(--fg-soft)]">
