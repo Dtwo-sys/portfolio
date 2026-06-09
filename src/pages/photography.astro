@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const base = import.meta.env.BASE_URL.slice(0, -1);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const photos = [
   { src: `${base}/images/photography/photo-01.jpg`, alt: 'Photograph by David Southworth' },
   { src: `${base}/images/photography/photo-02.jpg`, alt: 'Photograph by David Southworth' },

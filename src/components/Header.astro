@@ -2,7 +2,7 @@
 import { SITE, NAV } from '../site';
 import ThemeToggle from './ThemeToggle.astro';
 
-const base = import.meta.env.BASE_URL.slice(0, -1); // '' on Hostinger, '/portfolio' on Pages
+const base = import.meta.env.BASE_URL.replace(/\/$/, ''); // '' on Hostinger, '/portfolio' on Pages
 const path = Astro.url.pathname;
 const isActive = (href: string) => path === href || (href !== `${base}/` && path.startsWith(href));
 ---
