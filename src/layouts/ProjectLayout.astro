@@ -66,6 +66,19 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       )
     }
 
+    {/* App variant fallback: show hero image when no device screenshots yet. */}
+    {
+      data.variant === 'app' && data.screenshots.length === 0 && data.image && (
+        <Image
+          src={data.image}
+          alt={data.imageAlt || data.title}
+          widths={[600, 1000, 1400]}
+          sizes="(max-width: 768px) 100vw, 768px"
+          class="mt-8 w-full rounded-xl border border-[var(--rule)]"
+        />
+      )
+    }
+
     {/* Web variant: hero image if available. */}
     {
       data.variant === 'web' && data.image && (
