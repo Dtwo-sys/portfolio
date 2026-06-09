@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const isProd = import.meta.env.PROD;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const posts = (await getCollection('posts'))
   .filter((p) => !(isProd && p.data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -29,7 +30,7 @@ const fmt = (d: Date) =>
         <ul class="mt-10 divide-y divide-[var(--rule)]">
           {posts.map((post) => (
             <li class="py-5">
-              <a href={`/notes/${post.id}/`} class="group block">
+              <a href={`${base}/notes/${post.id}/`} class="group block">
                 <time class="label-mark" datetime={post.data.pubDate.toISOString()}>
                   {fmt(post.data.pubDate)}
                 </time>

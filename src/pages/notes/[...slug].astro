@@ -11,13 +11,14 @@ export const getStaticPaths = (async () => {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const fmt = (d: Date) =>
   d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description}>
   <article class="mx-auto max-w-3xl px-5 py-12">
-    <a href="/notes/" class="label-mark hover:text-[var(--accent)]">&larr; All notes</a>
+    <a href={`${base}/notes/`} class="label-mark hover:text-[var(--accent)]">&larr; All notes</a>
     <header class="mt-6 border-b border-[var(--rule)] pb-6">
       <time class="label-mark" datetime={post.data.pubDate.toISOString()}>
         {fmt(post.data.pubDate)}

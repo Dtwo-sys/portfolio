@@ -141,14 +141,23 @@ h4 {
 
 /* --- Calibration / measurement motifs --- */
 
-/* Graph-paper background: a faint fine grid. Apply to a section. */
-.bg-graph {
-  background-image:
-    linear-gradient(to right, var(--rule) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
-  background-size: 28px 28px;
-  background-position: center;
-  opacity: 1;
+/* Graph-paper background: a faint fine grid that fades out towards the edges
+   so it reads as a soft motif rather than a hard checkerboard (especially on
+   small screens). In @layer components so opacity-* utilities can tune it. */
+@layer components {
+  .bg-graph {
+    background-image:
+      linear-gradient(to right, var(--rule) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: center;
+    -webkit-mask-image: radial-gradient(
+      ellipse 75% 75% at 50% 40%,
+      #000 30%,
+      transparent 78%
+    );
+    mask-image: radial-gradient(ellipse 75% 75% at 50% 40%, #000 30%, transparent 78%);
+  }
 }
 
 /* Calibration tick rule: a horizontal scale of fine ticks. */

@@ -9,13 +9,13 @@ const projects = await getCollection('projects');
 const featured = projects
   .filter((p) => p.data.featured)
   .sort((a, b) => a.data.order - b.data.order)
-  .slice(0, 5);
+  .slice(0, 6);
 ---
 
 <BaseLayout>
   <!-- Hero -->
   <section class="relative border-b border-[var(--rule)]">
-    <div class="bg-graph pointer-events-none absolute inset-0 opacity-40" aria-hidden="true"></div>
+    <div class="bg-graph pointer-events-none absolute inset-0 opacity-50" aria-hidden="true"></div>
     <div class="relative mx-auto max-w-5xl px-5 py-20 sm:py-28">
       <div class="flex flex-col-reverse items-center gap-12 sm:flex-row sm:items-center sm:justify-between">
         <div class="flex-1">
@@ -42,41 +42,44 @@ const featured = projects
           </div>
         </div>
         <div class="relative flex-shrink-0 self-center">
-          {/* Static logo in light mode */}
+          {/* Light mode: clean static logo. */}
           <img
             src={`${base}/images/logo/logo-square-transparent.avif`}
-            alt=""
-            aria-hidden="true"
-            width="340"
-            height="340"
-            class="dark:hidden"
+            alt="D² Calibrated Ideas"
+            width="320"
+            height="320"
+            class="w-56 sm:w-80 dark:hidden"
           />
-          {/* Animated video in dark mode */}
-          <video
-            id="hero-logo-video"
-            src={`${base}/images/about/logo-video.mp4`}
-            width="340"
-            height="340"
-            autoplay
-            muted
-            playsinline
-            aria-hidden="true"
-            class="hidden mix-blend-screen dark:block"
-            style="transition: opacity 0.8s ease-out;"
-          />
-          {/* Horizontal logo fades in after video ends (dark mode only) */}
-          <div
-            id="hero-logo-reveal"
-            class="pointer-events-none absolute inset-0 flex items-center justify-center"
-            style="opacity:0; transition: opacity 1.2s ease-in-out;"
-          >
-            <img
-              src={`${base}/images/logo/d2-logo-transparent.webp`}
-              alt="D² Calibrated Ideas"
-              width="260"
-              height="87"
-              class="brightness-0 invert"
-            />
+
+          {/* Dark mode: the logo video plays once, then settles to the brand mark. */}
+          <div class="relative hidden w-56 sm:w-80 dark:block">
+            <video
+              id="hero-logo-video"
+              src={`${base}/images/about/logo-video.mp4`}
+              autoplay
+              muted
+              playsinline
+              preload="auto"
+              aria-hidden="true"
+              class="block w-full mix-blend-screen"
+              style="aspect-ratio: 1 / 1; transition: opacity 0.8s ease-out;"
+            ></video>
+            {/* Guaranteed end state: fades in when the video stops (or never plays). */}
+            <div
+              id="hero-logo-reveal"
+              class="pointer-events-none absolute inset-0 flex items-center justify-center"
+              style="opacity: 0; transition: opacity 0.9s ease-in-out;"
+            >
+              <div class="rounded-2xl bg-white p-4 shadow-lg shadow-black/20 sm:p-5">
+                <img
+                  src={`${base}/images/logo/d2-logo-full.png`}
+                  alt="D² Calibrated Ideas"
+                  width="220"
+                  height="220"
+                  class="w-36 sm:w-48"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -125,16 +128,46 @@ const featured = projects
       {SITE.email}
     </a>
   </section>
-<script is:inline>
-  (function () {
-    var video = document.getElementById('hero-logo-video');
-    var reveal = document.getElementById('hero-logo-reveal');
-    if (video && reveal) {
-      video.addEventListener('ended', function () {
+
+  <script is:inline>
+    (() => {
+      const video = document.getElementById('hero-logo-video');
+      const reveal = document.getElementById('hero-logo-reveal');
+      if (!video || !reveal) return;
+
+      let settled = false;
+      const settle = () => {
+        if (settled) return;
+        settled = true;
         video.style.opacity = '0';
         reveal.style.opacity = '1';
+      };
+
+      // Respect reduced-motion: skip the animation, show the mark immediately.
+      const reduce =
+        window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) {
+        settle();
+        return;
+      }
+
+      // Settle when the clip finishes playing.
+      video.addEventListener('ended', settle);
+
+      // Cap the wait to just past the clip length once we know it; this guards
+      // against 'ended' never firing on some browsers.
+      video.addEventListener('loadedmetadata', () => {
+        const ms = (isFinite(video.duration) ? video.duration : 8) * 1000 + 1500;
+        setTimeout(settle, ms);
       });
-    }
-  })();
-</script>
+
+      // Autoplay is frequently blocked on mobile. If play() is rejected, settle
+      // straight to the static mark rather than leaving a frozen first frame.
+      const p = video.play();
+      if (p && typeof p.catch === 'function') p.catch(settle);
+
+      // Absolute safety net.
+      setTimeout(settle, 12000);
+    })();
+  </script>
 </BaseLayout>

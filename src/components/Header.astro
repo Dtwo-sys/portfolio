@@ -7,41 +7,123 @@ const path = Astro.url.pathname;
 const isActive = (href: string) => path === href || (href !== `${base}/` && path.startsWith(href));
 ---
 
-<header class="border-b border-[var(--rule)]">
-  <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-4">
-    <a href={`${base}/`} class="group flex items-center gap-2" aria-label="Calibrated Ideas, home">
+<header
+  class="sticky top-0 z-40 border-b border-[var(--rule)] bg-[var(--bg)]/85 backdrop-blur-md"
+>
+  <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-3">
+    <a href={`${base}/`} class="flex items-center gap-2" aria-label="Calibrated Ideas, home">
       <img
         src={`${base}/images/logo/logo-square-transparent.avif`}
         alt=""
         aria-hidden="true"
-        width="52"
-        height="52"
+        width="48"
+        height="48"
+        class="h-10 w-10 sm:h-12 sm:w-12"
       />
       <span class="font-display text-lg font-medium tracking-tight">{SITE.name}</span>
     </a>
 
-    <nav aria-label="Primary" class="flex items-center gap-1 sm:gap-2">
-      <ul class="flex items-center gap-1 sm:gap-3 text-sm">
-        {
-          NAV.map((item) => (
-            <li>
-              <a
-                href={`${base}${item.href}`}
-                aria-current={isActive(`${base}${item.href}`) ? 'page' : undefined}
-                class:list={[
-                  'rounded px-2 py-1 transition-colors hover:text-[var(--accent)]',
-                  isActive(`${base}${item.href}`)
-                    ? 'text-[var(--accent)]'
-                    : 'text-[var(--fg-soft)]',
-                ]}
-              >
-                {item.label}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
+    <div class="flex items-center gap-1 sm:gap-2">
+      <!-- Desktop nav -->
+      <nav aria-label="Primary" class="hidden md:block">
+        <ul class="flex items-center gap-1 text-sm lg:gap-2">
+          {
+            NAV.map((item) => (
+              <li>
+                <a
+                  href={`${base}${item.href}`}
+                  aria-current={isActive(`${base}${item.href}`) ? 'page' : undefined}
+                  class:list={[
+                    'rounded px-2 py-1 transition-colors hover:text-[var(--accent)]',
+                    isActive(`${base}${item.href}`)
+                      ? 'text-[var(--accent)]'
+                      : 'text-[var(--fg-soft)]',
+                  ]}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
       <ThemeToggle />
-    </nav>
+
+      <!-- Mobile menu button -->
+      <button
+        id="nav-toggle"
+        type="button"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--rule)] text-[var(--fg-soft)] transition-colors hover:text-[var(--accent)] md:hidden"
+        aria-label="Open menu"
+        aria-controls="mobile-nav"
+        aria-expanded="false"
+      >
+        <svg
+          class="nav-icon-open h-5 w-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M4 7h16M4 12h16M4 17h16"></path>
+        </svg>
+        <svg
+          class="nav-icon-close hidden h-5 w-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M6 6l12 12M18 6L6 18"></path>
+        </svg>
+      </button>
+    </div>
   </div>
+
+  <!-- Mobile nav panel -->
+  <nav id="mobile-nav" aria-label="Primary" class="hidden border-t border-[var(--rule)] md:hidden">
+    <ul class="mx-auto flex max-w-5xl flex-col px-3 py-2">
+      {
+        NAV.map((item) => (
+          <li>
+            <a
+              href={`${base}${item.href}`}
+              aria-current={isActive(`${base}${item.href}`) ? 'page' : undefined}
+              class:list={[
+                'block rounded-lg px-3 py-2.5 text-base transition-colors hover:bg-[var(--bg-soft)] hover:text-[var(--accent)]',
+                isActive(`${base}${item.href}`)
+                  ? 'text-[var(--accent)]'
+                  : 'text-[var(--fg-soft)]',
+              ]}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
 </header>
+
+<script is:inline>
+  (() => {
+    const btn = document.getElementById('nav-toggle');
+    const panel = document.getElementById('mobile-nav');
+    if (!btn || !panel) return;
+    const open = btn.querySelector('.nav-icon-open');
+    const close = btn.querySelector('.nav-icon-close');
+    btn.addEventListener('click', () => {
+      const nowHidden = panel.classList.toggle('hidden');
+      const isOpen = !nowHidden;
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      btn.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+      if (open) open.classList.toggle('hidden', isOpen);
+      if (close) close.classList.toggle('hidden', !isOpen);
+    });
+  })();
+</script>
