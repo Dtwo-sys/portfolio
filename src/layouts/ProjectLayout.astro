@@ -49,7 +49,18 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </div>
     </header>
 
-    {/* App variant: device-framed screenshot gallery in place of a single shot. */}
+    {/* App variant: hero feature image first, then the device-framed screenshots. */}
+    {
+      data.variant === 'app' && data.image && (
+        <Image
+          src={data.image}
+          alt={data.imageAlt || data.title}
+          widths={[600, 1000, 1400]}
+          sizes="(max-width: 768px) 100vw, 768px"
+          class="mt-8 w-full rounded-xl border border-[var(--rule)]"
+        />
+      )
+    }
     {
       data.variant === 'app' && data.screenshots.length > 0 && (
         <section aria-label="App screenshots" class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
@@ -63,19 +74,6 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
             />
           ))}
         </section>
-      )
-    }
-
-    {/* App variant fallback: show hero image when no device screenshots yet. */}
-    {
-      data.variant === 'app' && data.screenshots.length === 0 && data.image && (
-        <Image
-          src={data.image}
-          alt={data.imageAlt || data.title}
-          widths={[600, 1000, 1400]}
-          sizes="(max-width: 768px) 100vw, 768px"
-          class="mt-8 w-full rounded-xl border border-[var(--rule)]"
-        />
       )
     }
 
