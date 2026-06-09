@@ -159,10 +159,27 @@ const featured = projects
         setTimeout(settle, ms);
       });
 
-      // Autoplay is frequently blocked on mobile. If play() is rejected, settle
-      // straight to the static mark rather than leaving a frozen first frame.
-      const p = video.play();
-      if (p && typeof p.catch === 'function') p.catch(settle);
+      // iOS only allows muted autoplay when the muted *property* is set (the
+      // attribute alone is unreliable), and an immediate play() at parse time
+      // often rejects because the clip is not ready yet. So set muted, then keep
+      // trying as the video becomes ready instead of giving up on first failure.
+      video.muted = true;
+      video.playsInline = true;
+      const tryPlay = () => {
+        const p = video.play();
+        if (p && typeof p.catch === 'function') p.catch(() => {});
+      };
+      tryPlay();
+      video.addEventListener('canplay', tryPlay, { once: true });
+
+      // Only fall back to the static mark if the clip still has not started a
+      // short moment after it could play (e.g. autoplay blocked in Low Power
+      // Mode), rather than leaving a frozen first frame.
+      video.addEventListener(
+        'canplay',
+        () => setTimeout(() => { if (!settled && video.paused) settle(); }, 700),
+        { once: true }
+      );
 
       // Absolute safety net.
       setTimeout(settle, 12000);
