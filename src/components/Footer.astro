@@ -1,0 +1,41 @@
+---
+import { SITE, NAV, SOCIAL } from '../site';
+const year = new Date().getFullYear();
+const social = SOCIAL.filter((s) => s.href);
+---
+
+<footer class="mt-24 border-t border-[var(--rule)]">
+  <div class="rule-ticks"></div>
+  <div class="mx-auto max-w-5xl px-5 py-10">
+    <div class="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
+      <div class="max-w-sm">
+        <p class="font-display text-base">{SITE.name}</p>
+        <p class="mt-2 text-sm text-[var(--fg-soft)]">
+          The portfolio of {SITE.author}. Made with precision and presence; no tracking, no
+          analytics.
+        </p>
+      </div>
+
+      <nav aria-label="Footer" class="flex flex-col gap-2 text-sm">
+        {NAV.map((item) => (
+          <a href={item.href} class="text-[var(--fg-soft)] hover:text-[var(--accent)]">
+            {item.label}
+          </a>
+        ))}
+      </nav>
+
+      <div class="flex flex-col gap-2 text-sm">
+        {social.map((s) => (
+          <a href={s.href} class="text-[var(--fg-soft)] hover:text-[var(--accent)]">
+            {s.label}
+          </a>
+        ))}
+        <a href="/legal/" class="text-[var(--fg-soft)] hover:text-[var(--accent)]">
+          Legal and privacy
+        </a>
+      </div>
+    </div>
+
+    <p class="label-mark mt-10">© {year} {SITE.author}</p>
+  </div>
+</footer>

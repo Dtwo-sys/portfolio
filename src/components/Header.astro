@@ -1,0 +1,47 @@
+---
+import { SITE, NAV } from '../site';
+import ThemeToggle from './ThemeToggle.astro';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) => path === href || (href !== '/' && path.startsWith(href));
+---
+
+<header class="border-b border-[var(--rule)]">
+  <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-4">
+    <a href="/" class="group flex items-center gap-2" aria-label="Calibrated Ideas, home">
+      <img
+        src="/images/logo/logo-square-transparent.avif"
+        alt=""
+        aria-hidden="true"
+        width="28"
+        height="28"
+        class="dark:invert"
+      />
+      <span class="font-display text-lg font-medium tracking-tight">{SITE.name}</span>
+    </a>
+
+    <nav aria-label="Primary" class="flex items-center gap-1 sm:gap-2">
+      <ul class="flex items-center gap-1 sm:gap-3 text-sm">
+        {
+          NAV.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+                class:list={[
+                  'rounded px-2 py-1 transition-colors hover:text-[var(--accent)]',
+                  isActive(item.href)
+                    ? 'text-[var(--accent)]'
+                    : 'text-[var(--fg-soft)]',
+                ]}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <ThemeToggle />
+    </nav>
+  </div>
+</header>

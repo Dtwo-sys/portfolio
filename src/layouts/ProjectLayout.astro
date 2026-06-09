@@ -1,0 +1,133 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import AppStoreBadge from '../components/AppStoreBadge.astro';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { data } = project;
+const hasStore = data.links.appStore || data.links.playStore;
+---
+
+<BaseLayout title={data.title} description={data.summary}>
+  <article class="mx-auto max-w-3xl px-5 py-12">
+    <a href="/projects/" class="label-mark hover:text-[var(--accent)]">&larr; All projects</a>
+
+    <header class="mt-6 border-b border-[var(--rule)] pb-8">
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
+        <span class="label-mark">{data.type}</span>
+        <span class="label-mark">{data.year}</span>
+        <span class="label-mark">{data.status}</span>
+      </div>
+      <h1 class="mt-3 text-4xl sm:text-5xl">{data.title}</h1>
+      <p class="mt-4 text-lg text-[var(--fg-soft)]">{data.summary}</p>
+
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        {
+          data.links.live && (
+            <a
+              href={data.links.live}
+              class="inline-flex items-center gap-2 rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
+            >
+              Visit {data.title} &rarr;
+            </a>
+          )
+        }
+        {hasStore && <AppStoreBadge appStore={data.links.appStore} playStore={data.links.playStore} />}
+        {
+          data.variant === 'app' && !hasStore && (
+            <span class="label-mark rounded border border-[var(--rule)] px-3 py-1">
+              Not publicly released
+            </span>
+          )
+        }
+      </div>
+    </header>
+
+    {/* App variant: device-framed screenshot gallery in place of a single shot. */}
+    {
+      data.variant === 'app' && data.screenshots.length > 0 && (
+        <section aria-label="App screenshots" class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
+          {data.screenshots.map((shot) => (
+            <Image
+              src={shot.src}
+              alt={shot.alt}
+              widths={[240, 480]}
+              sizes="(max-width: 640px) 45vw, 240px"
+              class="rounded-xl border border-[var(--rule)]"
+            />
+          ))}
+        </section>
+      )
+    }
+
+    {/* Web variant: hero image if available. */}
+    {
+      data.variant === 'web' && data.image && (
+        <Image
+          src={data.image}
+          alt={data.imageAlt || data.title}
+          widths={[600, 1000, 1400]}
+          sizes="(max-width: 768px) 100vw, 768px"
+          class="mt-8 w-full rounded-xl border border-[var(--rule)]"
+        />
+      )
+    }
+
+    <div
+      class="prose-cal mt-10 max-w-[var(--container-prose)]"
+    >
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
+
+<style is:global>
+  /* Lightweight prose styling for MDX case-study bodies. */
+  .prose-cal h2 {
+    font-size: 1.5rem;
+    margin-top: 2.25rem;
+    margin-bottom: 0.5rem;
+  }
+  .prose-cal h3 {
+    font-size: 1.2rem;
+    margin-top: 1.75rem;
+    margin-bottom: 0.4rem;
+  }
+  .prose-cal p {
+    margin-bottom: 1rem;
+    color: var(--fg-soft);
+  }
+  .prose-cal ul {
+    list-style: disc;
+    padding-left: 1.4rem;
+    margin-bottom: 1rem;
+    color: var(--fg-soft);
+  }
+  .prose-cal li {
+    margin-bottom: 0.3rem;
+  }
+  .prose-cal a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .prose-cal blockquote {
+    border-left: 3px solid var(--accent);
+    padding-left: 1rem;
+    font-style: italic;
+    color: var(--fg-soft);
+    margin: 1.25rem 0;
+  }
+  .prose-cal code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: var(--bg-soft);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+  }
+</style>

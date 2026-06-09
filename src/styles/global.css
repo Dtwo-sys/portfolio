@@ -1,0 +1,208 @@
+/*
+  Calibrated Ideas — global styles and design tokens.
+
+  Visual identity (brief.md Section 7): evolves away from the old navy/gold.
+  - Warm monochrome base: "paper" off-white + "ink" graphite, warm undertone.
+  - One accent: "tide" sea-glass teal — an instrument-readout colour for the
+    precision side, a calm coastal tone for the creative side (poetry, the
+    Northumberland photography, Between the Waves).
+  - Fine measurement-line accents and graph-paper motifs via utilities below.
+
+  Type: Fraunces (display serif), IBM Plex Sans (body), IBM Plex Mono
+  (measurement labels: years, tags, calibration marks). Self-hosted via
+  Fontsource imports in BaseLayout — no third-party font CDN (privacy ethos).
+*/
+
+@import 'tailwindcss';
+
+/* Honour OS dark-mode preference; a manual toggle can override via .dark. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* --- Warm monochrome --- */
+  --color-paper: #f5f2ec;
+  --color-paper-soft: #ece7dd;
+  --color-ink: #1b1d1e;
+  --color-ink-soft: #3a3d3f;
+  --color-muted: #6b6c66;
+
+  /* Fine grid / measurement-line colour */
+  --color-line: #d8d2c4;
+
+  /* --- Accent: tide (sea-glass teal) --- */
+  /* tide-600 meets WCAG AA for body text on paper. */
+  --color-tide-300: #7fd0c6;
+  --color-tide-500: #2a9d8f;
+  --color-tide-600: #1f7d72;
+  --color-tide-700: #16615a;
+
+  /* --- Dark surfaces --- */
+  --color-night: #16181a;
+  --color-night-soft: #202326;
+
+  /* --- Type --- */
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Code', monospace;
+
+  /* Reading measure */
+  --container-prose: 68ch;
+}
+
+/* Light/dark surface roles, resolved as CSS variables so utilities can read them. */
+:root {
+  --bg: var(--color-paper);
+  --bg-soft: var(--color-paper-soft);
+  --fg: var(--color-ink);
+  --fg-soft: var(--color-ink-soft);
+  --rule: var(--color-line);
+  --accent: var(--color-tide-600);
+}
+
+.dark {
+  --bg: var(--color-night);
+  --bg-soft: var(--color-night-soft);
+  --fg: var(--color-paper);
+  --fg-soft: #c8c4ba;
+  --rule: #34373a;
+  --accent: var(--color-tide-300);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 460;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+  text-wrap: balance;
+}
+
+/* Measurement-style label: small caps mono, used for years, tags, eyebrows. */
+.label-mark {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* Visible focus state for keyboard users (brief.md Section 15). */
+:where(a, button, input, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Skip link, shown only when focused. */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+}
+.skip-link:focus {
+  left: 0.75rem;
+  top: 0.75rem;
+  background: var(--bg);
+  color: var(--fg);
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--accent);
+}
+
+/* --- Calibration / measurement motifs --- */
+
+/* Graph-paper background: a faint fine grid. Apply to a section. */
+.bg-graph {
+  background-image:
+    linear-gradient(to right, var(--rule) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
+  background-size: 28px 28px;
+  background-position: center;
+  opacity: 1;
+}
+
+/* Calibration tick rule: a horizontal scale of fine ticks. */
+.rule-ticks {
+  height: 12px;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--rule) 0,
+    var(--rule) 1px,
+    transparent 1px,
+    transparent 10px
+  );
+}
+
+/* --- Prose: shared styling for MDX bodies and long-form pages --- */
+.prose-cal h2 {
+  font-size: 1.5rem;
+  margin-top: 2.25rem;
+  margin-bottom: 0.5rem;
+}
+.prose-cal h3 {
+  font-size: 1.2rem;
+  margin-top: 1.75rem;
+  margin-bottom: 0.4rem;
+}
+.prose-cal p {
+  margin-bottom: 1rem;
+  color: var(--fg-soft);
+}
+.prose-cal ul {
+  list-style: disc;
+  padding-left: 1.4rem;
+  margin-bottom: 1rem;
+  color: var(--fg-soft);
+}
+.prose-cal li {
+  margin-bottom: 0.3rem;
+}
+.prose-cal a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose-cal blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 1rem;
+  font-style: italic;
+  color: var(--fg-soft);
+  margin: 1.25rem 0;
+}
+.prose-cal code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--bg-soft);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}

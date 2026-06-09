@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const photos = [
+  { src: '/images/photography/photo-01.jpg', alt: 'Photograph by David Southworth' },
+  { src: '/images/photography/photo-02.jpg', alt: 'Photograph by David Southworth' },
+  { src: '/images/photography/photo-03.jpg', alt: "Rita McBride's art in Toxteth Reservoir" },
+  { src: '/images/photography/photo-04.jpg', alt: 'Photograph by David Southworth' },
+  { src: '/images/photography/photo-05.jpg', alt: 'Aerial photograph by David Southworth' },
+  { src: '/images/photography/photo-06.jpg', alt: 'Photograph by David Southworth' },
+  { src: '/images/photography/photo-07.jpg', alt: 'Photograph by David Southworth' },
+];
+---
+
+<BaseLayout
+  title="Photography"
+  description="Selected photography by David Southworth — coastal light, natural textures, architecture and everyday moments, shot on iPhone."
+>
+  <section class="mx-auto max-w-5xl px-5 py-12">
+    <p class="label-mark">Photography</p>
+    <h1 class="mt-3 text-4xl sm:text-5xl">Photography</h1>
+    <p class="mt-4 max-w-2xl text-lg text-[var(--fg-soft)]">
+      I use photography as a way to notice and capture details that often go unseen: coastal light,
+      natural textures, architecture and everyday moments. All shot on iPhone.
+    </p>
+    <p class="mt-2 text-sm text-[var(--fg-soft)]">
+      More recent work on
+      <a
+        href="https://www.instagram.com/david_j_southworth/"
+        class="text-[var(--accent)] underline underline-offset-2"
+        >Instagram @david_j_southworth</a
+      >.
+    </p>
+
+    <div class="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3">
+      {
+        photos.map((photo) => (
+          <div class="overflow-hidden rounded-lg bg-[var(--bg-soft)] aspect-square">
+            <img
+              src={photo.src}
+              alt={photo.alt}
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.04]"
+            />
+          </div>
+        ))
+      }
+    </div>
+
+    <p class="mt-10 text-sm text-[var(--fg-soft)]">
+      More images to come. Recent work also on
+      <a
+        href="https://www.instagram.com/david_j_southworth/"
+        class="text-[var(--accent)] underline underline-offset-2"
+        >Instagram</a
+      >.
+    </p>
+  </section>
+</BaseLayout>

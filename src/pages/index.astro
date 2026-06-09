@@ -1,0 +1,86 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { SITE } from '../site';
+
+const projects = await getCollection('projects');
+const featured = projects
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 5);
+---
+
+<BaseLayout>
+  <!-- Hero -->
+  <section class="relative overflow-hidden border-b border-[var(--rule)]">
+    <div class="bg-graph pointer-events-none absolute inset-0 opacity-40" aria-hidden="true"></div>
+    <div class="relative mx-auto max-w-5xl px-5 py-20 sm:py-28">
+      <p class="label-mark">Calibrated Ideas — the portfolio of {SITE.author}</p>
+      <h1 class="mt-4 max-w-3xl text-4xl leading-tight sm:text-6xl">
+        Digital projects, technical writing and creative tools, made with precision and presence.
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg text-[var(--fg-soft)]">
+        I build websites, apps, tools and written resources, shaped by a long background in
+        temperature metrology, technical communication, training and AI-assisted development.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a
+          href="/projects/"
+          class="rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
+        >
+          View projects
+        </a>
+        <a
+          href="/about/"
+          class="rounded-lg border border-[var(--rule)] px-5 py-2.5 text-sm font-medium transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+        >
+          Read about me
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured projects -->
+  <section class="mx-auto max-w-5xl px-5 py-16">
+    <div class="flex items-baseline justify-between">
+      <h2 class="text-2xl sm:text-3xl">Featured work</h2>
+      <a href="/projects/" class="label-mark hover:text-[var(--accent)]">All projects &rarr;</a>
+    </div>
+    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {featured.map((project) => <ProjectCard project={project} />)}
+    </div>
+  </section>
+
+  <!-- What connects the work -->
+  <section class="border-y border-[var(--rule)] bg-[var(--bg-soft)]">
+    <div class="mx-auto max-w-3xl px-5 py-16">
+      <h2 class="text-2xl sm:text-3xl">What connects the work</h2>
+      <p class="mt-5 text-lg text-[var(--fg-soft)]">
+        Precision measurement, technical writing, AI-assisted tools, web and mobile development,
+        training and creative practice are not separate strands. They share one habit: paying close
+        attention, then making the result clear and honest.
+      </p>
+      <p class="mt-4 text-lg text-[var(--fg-soft)]">
+        A measurement is only as good as the thinking behind it; a piece of writing only as good as
+        what it is willing to say plainly. The same applies to an app or a website. Across all of
+        it runs a privacy-first instinct: nothing tracked, nothing collected that need not be.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact strip -->
+  <section class="mx-auto max-w-3xl px-5 py-16 text-center">
+    <h2 class="text-2xl sm:text-3xl">Get in touch</h2>
+    <p class="mx-auto mt-4 max-w-xl text-lg text-[var(--fg-soft)]">
+      I'm always happy to hear from people working on thoughtful digital, technical or creative
+      projects. If something here sparks an idea, feel free to get in touch.
+    </p>
+    <a
+      href={`mailto:${SITE.email}`}
+      class="mt-6 inline-block rounded-lg border border-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent)] transition-colors hover:bg-[var(--accent)] hover:text-white"
+    >
+      {SITE.email}
+    </a>
+  </section>
+</BaseLayout>

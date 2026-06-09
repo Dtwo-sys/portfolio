@@ -1,0 +1,97 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { projectCategories } from '../../content.config';
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+// Only show categories that are actually used.
+const used = new Set(projects.flatMap((p) => p.data.categories));
+const categories = projectCategories.filter((c) => used.has(c));
+---
+
+<BaseLayout
+  title="Projects"
+  description="A curated portfolio: web builds, AI and tools, mobile apps, technical writing, creative and radio projects."
+>
+  <section class="mx-auto max-w-5xl px-5 py-12">
+    <p class="label-mark">Portfolio</p>
+    <h1 class="mt-3 text-4xl sm:text-5xl">Projects</h1>
+    <p class="mt-4 max-w-2xl text-lg text-[var(--fg-soft)]">
+      A range of digital work: web builds, AI-assisted tools, a shipped iOS app, a privacy-first
+      wellbeing web app, technical writing, and creative and radio projects.
+    </p>
+
+    <!-- Category filter (progressive enhancement; all projects show without JS) -->
+    <div class="mt-8 flex flex-wrap gap-2" role="group" aria-label="Filter projects by category">
+      <button
+        type="button"
+        data-filter="all"
+        aria-pressed="true"
+        class="filter-btn rounded-full border border-[var(--accent)] bg-[var(--accent)] px-3 py-1 text-sm text-white"
+      >
+        All
+      </button>
+      {
+        categories.map((c) => (
+          <button
+            type="button"
+            data-filter={c}
+            aria-pressed="false"
+            class="filter-btn rounded-full border border-[var(--rule)] px-3 py-1 text-sm text-[var(--fg-soft)] transition-colors hover:border-[var(--accent)]"
+          >
+            {c}
+          </button>
+        ))
+      }
+    </div>
+
+    <div id="project-grid" class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        projects.map((project) => (
+          <div class="project-item" data-categories={project.data.categories.join('|')}>
+            <ProjectCard project={project} />
+          </div>
+        ))
+      }
+    </div>
+    <p id="no-results" class="mt-8 hidden text-[var(--fg-soft)]">No projects in that category yet.</p>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  (() => {
+    const buttons = Array.from(document.querySelectorAll('.filter-btn'));
+    const items = Array.from(document.querySelectorAll('.project-item'));
+    const empty = document.getElementById('no-results');
+    const activeCls = ['border-[var(--accent)]', 'bg-[var(--accent)]', 'text-white'];
+    const idleCls = ['text-[var(--fg-soft)]'];
+
+    function setActive(btn) {
+      buttons.forEach((b) => {
+        const on = b === btn;
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        activeCls.forEach((c) => b.classList.toggle(c, on));
+        idleCls.forEach((c) => b.classList.toggle(c, !on));
+      });
+    }
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const filter = btn.getAttribute('data-filter');
+        setActive(btn);
+        let visible = 0;
+        items.forEach((item) => {
+          const cats = (item.getAttribute('data-categories') || '').split('|');
+          const show = filter === 'all' || cats.includes(filter);
+          item.classList.toggle('hidden', !show);
+          if (show) visible++;
+        });
+        if (empty) empty.classList.toggle('hidden', visible !== 0);
+      });
+    });
+  })();
+</script>

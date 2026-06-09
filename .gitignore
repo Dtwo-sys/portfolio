@@ -1,0 +1,26 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+*.log
+
+# environment
+.env
+.env.production
+
+# editor / OS
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+
+# scraper working archive — local-only, not shipped (brief.md Section 9/10)
+imported/current-site/images/
+
+# logo source folder — curated copies are in public/images/logo/
+logo images/

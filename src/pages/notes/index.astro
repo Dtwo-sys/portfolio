@@ -1,0 +1,45 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const isProd = import.meta.env.PROD;
+const posts = (await getCollection('posts'))
+  .filter((p) => !(isProd && p.data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+
+<BaseLayout
+  title="Notes"
+  description="Writing on technology, AI, temperature metrology, creativity and photography."
+>
+  <section class="mx-auto max-w-3xl px-5 py-12">
+    <p class="label-mark">Writing</p>
+    <h1 class="mt-3 text-4xl sm:text-5xl">Notes</h1>
+    <p class="mt-4 max-w-2xl text-lg text-[var(--fg-soft)]">
+      Occasional writing on technology, AI, temperature metrology, creativity and photography.
+    </p>
+
+    {
+      posts.length === 0 ? (
+        <p class="mt-10 text-[var(--fg-soft)]">No notes published yet. Check back soon.</p>
+      ) : (
+        <ul class="mt-10 divide-y divide-[var(--rule)]">
+          {posts.map((post) => (
+            <li class="py-5">
+              <a href={`/notes/${post.id}/`} class="group block">
+                <time class="label-mark" datetime={post.data.pubDate.toISOString()}>
+                  {fmt(post.data.pubDate)}
+                </time>
+                <h2 class="mt-1 text-xl group-hover:text-[var(--accent)]">{post.data.title}</h2>
+                <p class="mt-1 text-[var(--fg-soft)]">{post.data.description}</p>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+</BaseLayout>

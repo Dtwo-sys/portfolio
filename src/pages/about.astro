@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../site';
+---
+
+<BaseLayout
+  title="About"
+  description="David Southworth (D2): over forty years in temperature metrology, technical writing, AI tools, web and mobile work, photography and reflective practice."
+>
+  <article class="mx-auto max-w-3xl px-5 py-12">
+    <p class="label-mark">About</p>
+    <h1 class="mt-3 text-4xl sm:text-5xl">David Southworth</h1>
+    <p class="mt-4 text-lg text-[var(--fg-soft)]">
+      Also known as D2. I make digital things and write about them, with a long background in
+      precision measurement and a habit of paying close attention.
+    </p>
+
+    <div class="prose-cal mt-10 max-w-[var(--container-prose)]">
+      <p>
+        My working life has centred on temperature metrology, over forty years of calibration,
+        training, technical writing and international project work. That background shapes how I
+        approach everything else: a stated figure is only meaningful once you understand the
+        conditions behind it, and the same is true of most claims.
+      </p>
+
+      <h2>Precision and presence</h2>
+      <p>
+        Precision is not coldness. The care it takes to make a measurement you can defend is the
+        same care that good writing, a calm interface or a well-made photograph asks for. I am
+        interested in the point where technical precision and creative attention meet, and in
+        building things that are both correct and humane.
+      </p>
+
+      <h2>How I work</h2>
+      <p>
+        I build websites, web apps and tools, I write technical and reflective pieces, and I help
+        people get to grips with AI and digital tools through training. I use AI to assist with
+        structure and expression in my professional writing; the ideas remain my own, and for
+        poetry I use only my own words. I work plainly, say what I can stand behind, and leave out
+        what I cannot.
+      </p>
+      <p>
+        A privacy-first instinct runs through the work. Where something does not need to collect
+        data, it does not. Both FeelingVault and Between the Waves are built on that principle.
+      </p>
+
+      <h2>Background, in brief</h2>
+      <ul>
+        <li>Over forty years in temperature metrology: calibration, ITS-90, measurement uncertainty.</li>
+        <li>Technical writing and plain-English communication for specialist audiences.</li>
+        <li>AI and IT training for individuals and small businesses.</li>
+        <li>Web and mobile development, including a shipped iOS app.</li>
+        <li>Counselling training, and the value of listening deeply.</li>
+        <li>Photography, poetry, journaling and parkrun.</li>
+        <li>UK-based, working locally and remotely.</li>
+      </ul>
+
+      <p>
+        If any of this connects with something you are working on, see the
+        <a href="/projects/">projects</a> or <a href="/contact/">get in touch</a>.
+      </p>
+    </div>
+
+    <p class="label-mark mt-10">
+      <a href={`mailto:${SITE.email}`} class="hover:text-[var(--accent)]">{SITE.email}</a>
+    </p>
+  </article>
+</BaseLayout>
