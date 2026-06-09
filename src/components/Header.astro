@@ -12,13 +12,22 @@ const isActive = (href: string) => path === href || (href !== `${base}/` && path
 >
   <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-3">
     <a href={`${base}/`} class="flex shrink-0 items-center gap-2" aria-label="Calibrated Ideas, home">
+      {/* Navy D for the light header; paper D for the near-black dark header. */}
       <img
         src={`${base}/images/logo/d2-mark.png`}
         alt=""
         aria-hidden="true"
         width="409"
         height="270"
-        class="h-9 w-auto shrink-0 object-contain sm:h-10"
+        class="h-9 w-auto shrink-0 object-contain sm:h-10 dark:hidden"
+      />
+      <img
+        src={`${base}/images/logo/d2-mark-light.png`}
+        alt=""
+        aria-hidden="true"
+        width="409"
+        height="270"
+        class="hidden h-9 w-auto shrink-0 object-contain sm:h-10 dark:block"
       />
       <span class="font-display text-xl font-semibold tracking-tight sm:text-2xl">{SITE.name}</span>
     </a>
