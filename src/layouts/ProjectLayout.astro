@@ -11,11 +11,12 @@ interface Props {
 const { project } = Astro.props;
 const { data } = project;
 const hasStore = data.links.appStore || data.links.playStore;
+const base = import.meta.env.BASE_URL.slice(0, -1);
 ---
 
 <BaseLayout title={data.title} description={data.summary}>
   <article class="mx-auto max-w-3xl px-5 py-12">
-    <a href="/projects/" class="label-mark hover:text-[var(--accent)]">&larr; All projects</a>
+    <a href={`${base}/projects/`} class="label-mark hover:text-[var(--accent)]">&larr; All projects</a>
 
     <header class="mt-6 border-b border-[var(--rule)] pb-8">
       <div class="flex flex-wrap items-center gap-x-4 gap-y-1">

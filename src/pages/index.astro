@@ -4,6 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import { SITE } from '../site';
 
+const base = import.meta.env.BASE_URL.slice(0, -1);
 const projects = await getCollection('projects');
 const featured = projects
   .filter((p) => p.data.featured)
@@ -26,13 +27,13 @@ const featured = projects
       </p>
       <div class="mt-8 flex flex-wrap gap-3">
         <a
-          href="/projects/"
+          href={`${base}/projects/`}
           class="rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
         >
           View projects
         </a>
         <a
-          href="/about/"
+          href={`${base}/about/`}
           class="rounded-lg border border-[var(--rule)] px-5 py-2.5 text-sm font-medium transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
         >
           Read about me
@@ -45,7 +46,7 @@ const featured = projects
   <section class="mx-auto max-w-5xl px-5 py-16">
     <div class="flex items-baseline justify-between">
       <h2 class="text-2xl sm:text-3xl">Featured work</h2>
-      <a href="/projects/" class="label-mark hover:text-[var(--accent)]">All projects &rarr;</a>
+      <a href={`${base}/projects/`} class="label-mark hover:text-[var(--accent)]">All projects &rarr;</a>
     </div>
     <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {featured.map((project) => <ProjectCard project={project} />)}

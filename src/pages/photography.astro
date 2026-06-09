@@ -1,14 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
+const base = import.meta.env.BASE_URL.slice(0, -1);
 const photos = [
-  { src: '/images/photography/photo-01.jpg', alt: 'Photograph by David Southworth' },
-  { src: '/images/photography/photo-02.jpg', alt: 'Photograph by David Southworth' },
-  { src: '/images/photography/photo-03.jpg', alt: "Rita McBride's art in Toxteth Reservoir" },
-  { src: '/images/photography/photo-04.jpg', alt: 'Photograph by David Southworth' },
-  { src: '/images/photography/photo-05.jpg', alt: 'Aerial photograph by David Southworth' },
-  { src: '/images/photography/photo-06.jpg', alt: 'Photograph by David Southworth' },
-  { src: '/images/photography/photo-07.jpg', alt: 'Photograph by David Southworth' },
+  { src: `${base}/images/photography/photo-01.jpg`, alt: 'Photograph by David Southworth' },
+  { src: `${base}/images/photography/photo-02.jpg`, alt: 'Photograph by David Southworth' },
+  { src: `${base}/images/photography/photo-03.jpg`, alt: "Rita McBride's art in Toxteth Reservoir" },
+  { src: `${base}/images/photography/photo-04.jpg`, alt: 'Photograph by David Southworth' },
+  { src: `${base}/images/photography/photo-05.jpg`, alt: 'Aerial photograph by David Southworth' },
+  { src: `${base}/images/photography/photo-06.jpg`, alt: 'Photograph by David Southworth' },
+  { src: `${base}/images/photography/photo-07.jpg`, alt: 'Photograph by David Southworth' },
 ];
 ---
 

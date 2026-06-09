@@ -10,7 +10,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       That page isn't here. The reading is out of range.
     </p>
     <a
-      href="/"
+      href={import.meta.env.BASE_URL}
       class="mt-8 inline-block rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
     >
       Back to home
