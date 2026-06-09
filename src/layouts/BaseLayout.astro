@@ -57,8 +57,7 @@ const ogImageUrl = ogImage ? new URL(ogImage, SITE.url).href : undefined;
       (() => {
         try {
           const stored = localStorage.getItem('theme');
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          if (stored === 'dark' || (!stored && prefersDark)) {
+          if (stored !== 'light') {
             document.documentElement.classList.add('dark');
           }
         } catch (e) {}
