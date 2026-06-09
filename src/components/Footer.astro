@@ -11,15 +11,13 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
       <div class="max-w-sm">
         <a href={`${base}/`} class="inline-block" aria-label="Calibrated Ideas, home">
-          <div class="rounded-lg bg-white px-3 py-2">
-            <img
-              src={`${base}/images/logo/logo-horizontal.png`}
-              alt="D² Calibrated Ideas"
-              width="150"
-              height="50"
-              class="block"
-            />
-          </div>
+          <img
+            src={`${base}/images/logo/d2-logo-transparent.webp`}
+            alt="D² Calibrated Ideas"
+            width="180"
+            height="60"
+            class="dark:brightness-0 dark:invert"
+          />
         </a>
         <p class="mt-3 text-sm text-[var(--fg-soft)]">
           The portfolio of {SITE.author}. Made with precision and presence; no tracking, no
