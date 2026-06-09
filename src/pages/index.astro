@@ -15,38 +15,43 @@ const featured = projects
 <BaseLayout>
   <!-- Hero -->
   <section class="relative overflow-hidden border-b border-[var(--rule)]">
-    <img
-      src={`${base}/images/photography/photo-02.jpg`}
-      alt=""
-      aria-hidden="true"
-      class="pointer-events-none absolute inset-0 h-full w-full object-cover object-[50%_40%]"
-      loading="eager"
-      decoding="async"
-    />
-    <div class="pointer-events-none absolute inset-0 bg-black/65" aria-hidden="true"></div>
-    <div class="bg-graph pointer-events-none absolute inset-0 opacity-15" aria-hidden="true"></div>
+    <div class="bg-graph pointer-events-none absolute inset-0 opacity-40" aria-hidden="true"></div>
     <div class="relative mx-auto max-w-5xl px-5 py-20 sm:py-28">
-      <p class="label-mark text-white/70">Calibrated Ideas — the portfolio of {SITE.author}</p>
-      <h1 class="mt-4 max-w-3xl text-4xl leading-tight text-white sm:text-6xl">
-        Digital projects, technical writing and creative tools, made with precision and presence.
-      </h1>
-      <p class="mt-6 max-w-2xl text-lg text-white/80">
-        I build websites, apps, tools and written resources, shaped by a long background in
-        temperature metrology, technical communication, training and AI-assisted development.
-      </p>
-      <div class="mt-8 flex flex-wrap gap-3">
-        <a
-          href={`${base}/projects/`}
-          class="rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
-        >
-          View projects
-        </a>
-        <a
-          href={`${base}/about/`}
-          class="rounded-lg border border-white/30 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
-        >
-          Read about me
-        </a>
+      <div class="flex flex-col-reverse items-center gap-10 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex-1">
+          <p class="label-mark">Calibrated Ideas — the portfolio of {SITE.author}</p>
+          <h1 class="mt-4 max-w-2xl text-4xl leading-tight sm:text-6xl">
+            Digital projects, technical writing and creative tools, made with precision and presence.
+          </h1>
+          <p class="mt-6 max-w-xl text-lg text-[var(--fg-soft)]">
+            I build websites, apps, tools and written resources, shaped by a long background in
+            temperature metrology, technical communication, training and AI-assisted development.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a
+              href={`${base}/projects/`}
+              class="rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
+            >
+              View projects
+            </a>
+            <a
+              href={`${base}/about/`}
+              class="rounded-lg border border-[var(--rule)] px-5 py-2.5 text-sm font-medium transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+            >
+              Read about me
+            </a>
+          </div>
+        </div>
+        <div class="flex-shrink-0">
+          <img
+            src={`${base}/images/logo/logo-square-transparent.avif`}
+            alt=""
+            aria-hidden="true"
+            width="220"
+            height="220"
+            class="opacity-90"
+          />
+        </div>
       </div>
     </div>
   </section>
