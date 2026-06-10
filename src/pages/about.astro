@@ -65,15 +65,22 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <h2>Published work</h2>
       <p>
         Articles on temperature measurement, calibration and metrology published in
-        <em>Practical Wireless</em> and <em>Instrumentation Monthly</em>.
+        <em>Practical Wireless</em>, <em>Instrumentation Monthly</em> and <em>Cal Lab: The International Journal of Metrology</em>.
       </p>
-      <div class="mt-4">
+      <div class="not-prose mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <img
-          src={`${base}/images/about/published-covers.png`}
-          alt="Covers of Practical Wireless and Instrumentation Monthly featuring articles by David Southworth"
+          src={`${base}/images/about/published-practical-wireless.jpg`}
+          alt="Practical Wireless magazine, featuring an article by David Southworth"
           loading="lazy"
           decoding="async"
-          class="rounded-lg border border-[var(--rule)] max-w-sm w-full"
+          class="w-full rounded-xl"
+        />
+        <img
+          src={`${base}/images/about/published-metrology.jpg`}
+          alt="Cal Lab, MEPCA and Instrumentation Monthly magazines featuring articles by David Southworth"
+          loading="lazy"
+          decoding="async"
+          class="w-full rounded-xl"
         />
       </div>
     </div>
