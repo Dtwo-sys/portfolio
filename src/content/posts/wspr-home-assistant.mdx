@@ -2,12 +2,17 @@
 title: 'Home Assistant: building a WSPR radio integration with AI assistance'
 description: 'WSPR signals tell you how radio propagation is behaving on any given day. I wanted that data inside Home Assistant — so I built an integration to bring it there.'
 pubDate: 2025-04-22
-heroImageAlt: 'Home Assistant dashboard showing live WSPR propagation spots, SNR trend, and distance records'
+heroImage: '../../assets/images/blog/wspr-home-assistant/ha-dashboard.png'
+heroImageAlt: 'Home Assistant WSPR Station Monitor dashboard showing live RX spots from European stations on 40m, with distance records panel'
 tags: ['radio', 'home-assistant', 'ai', 'python']
 draft: false
 ---
 
-WSPR (Weak Signal Propagation Reporter) is an amateur radio mode designed for one narrow purpose: finding out how well signals are travelling. Transmissions are very low power — typically a watt or less — and very short. Each transmission encodes a callsign, grid locator, and power level, then gets decoded and logged by receivers worldwide. The results land at [wspr.live](https://wspr.live), a public database of reception reports updated continuously. It is an efficient way to read the ionosphere.
+import { Image } from 'astro:assets';
+import dashboard from '../../assets/images/blog/wspr-home-assistant/ha-dashboard.png';
+import records from '../../assets/images/blog/wspr-home-assistant/ha-records.png';
+
+WSPR (Weak Signal Propagation Reporter) is an amateur radio mode designed for one narrow purpose: finding out how well signals are travelling. Transmissions are very low power — typically a watt or less — and very short. Each transmission encodes a callsign, grid locator and power level, then gets decoded and logged by receivers worldwide. The data ends up at [wspr.live](https://wspr.live), a public database of reception reports updated continuously. It is an efficient way to read the ionosphere.
 
 I run WSPR from my station (G5OHM), using WSJT-X software alongside an HF transceiver. The data is there on WSPRnet and PSKReporter, available to look at any time. What I wanted was to see it inside Home Assistant alongside everything else on my dashboard, without switching between applications.
 
@@ -20,18 +25,34 @@ Two sensors are created:
 - `sensor.wspr_live_rx_spots` — stations I have received
 - `sensor.wspr_live_tx_spots` — stations that have received me
 
-Every 30 to 60 minutes the integration queries the WSPR.live API, processes the returned JSON, and updates both sensors. Each spot entry includes the callsign, signal-to-noise ratio, frequency band, distance in kilometres, and country. The country is resolved from the callsign prefix using a lookup table; the band (20m, 40m, and so on) is mapped from the raw frequency value using a static dictionary.
+Every 30 to 60 minutes the integration queries the WSPR.live API, processes the returned JSON and updates both sensors. Each spot entry includes the callsign, signal-to-noise ratio, frequency band (mapped from raw frequency to the standard amateur bands: 40m, 20m, 30m, and so on), distance in kilometres, and country — resolved from the callsign prefix using a lookup table.
 
-Home Assistant input helpers track the furthest received and transmitted distances, updating automatically whenever a new record is set. The dashboard I put together shows a live table of spots, an SNR trend over time, and the running distance records for each direction.
+Home Assistant input helpers track the furthest received and transmitted distances, updating automatically whenever a new record is set. On 19 April 2025, a particularly good morning on 40m, the dashboard was showing 100 received spots and 50 transmitted, with the furthest RX at 6,946 km (KK4JI, USA) and the furthest TX at 5,247 km (WA2TP, USA).
+
+<div class="not-prose my-8">
+  <figure>
+    <Image src={dashboard} alt="Home Assistant WSPR Station Monitor: live spot table on the left showing European stations on 40m with SNR and distance values; WSPR Distance Records panel on the right showing all-time records of 6946 km RX and 5247 km TX" class="w-full rounded-xl" widths={[700, 1000]} sizes="(max-width: 768px) 100vw, 720px" />
+    <figcaption class="label-mark mt-2 block">WSPR Station Monitor — 19 April 2025, 40m propagation to Europe and North America</figcaption>
+  </figure>
+</div>
+
+The dashboard shows a table of current spots with callsign, band, SNR and distance; a running count per band; and the all-time and current-session distance records for each direction.
+
+<div class="not-prose my-8 flex justify-center">
+  <figure class="max-w-xs w-full">
+    <Image src={records} alt="WSPR Records card showing furthest received station KK4JI at 4316 miles and furthest transmitted station WA2TP at 3260 miles" class="w-full rounded-xl" widths={[400, 600]} sizes="(max-width: 480px) 100vw, 400px" />
+    <figcaption class="label-mark mt-2 block">Distance record card — furthest RX and TX all-time</figcaption>
+  </figure>
+</div>
 
 Everything runs locally. The only external call is to the WSPR.live API.
 
 ## How it was built
 
-The data flow is straightforward: a polling coordinator fetches fresh data on the configured interval, processes it, and makes the result available through the standard Home Assistant entity model. The data structures involved are not complicated. Getting the Home Assistant integration architecture right — config entries, coordinators, entity registration — takes longer to understand than the core logic.
+The architecture is straightforward: a polling coordinator fetches fresh data at the configured interval, processes it into sensor attributes and makes it available through the standard Home Assistant entity model. Country lookup runs from a callsign prefix table; band mapping is a static dictionary keyed on frequency ranges.
 
-I am not a software developer. My background is in electronics and instrumentation. Building something like this would previously have meant months of learning Python seriously or finding someone else to write it. What changed is that AI tools — I used Claude and ChatGPT across different stages — can generate structural scaffolding, explain what error messages mean, and suggest how to fix them. The decisions about what to display, how to structure the data, and when something was working correctly were mine. The AI kept me moving through the parts I would otherwise have got stuck on.
+I am not a software developer. My background is in electronics and instrumentation. Getting the Home Assistant integration architecture right — config entries, coordinators, entity registration — takes longer to understand from scratch than the core data logic. What changed is that AI tools (I used Claude and ChatGPT across different stages) can generate structural scaffolding and explain what error messages mean. The decisions about what to display, how to structure the data, and when something was working correctly were mine. The AI kept me moving through the parts I would otherwise have got stuck on.
 
 The code is on GitHub: [Dtwo-sys/wspr\_live](https://github.com/Dtwo-sys/wspr_live).
 
-If you run WSPR and have Home Assistant, it should work with configuration similar to any other custom component. If you find problems or have suggestions, raise an issue on the repository.
+If you run WSPR and use Home Assistant, it should work as a custom component. If you find problems or have suggestions, raise an issue on the repository.
