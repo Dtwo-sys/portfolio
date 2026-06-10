@@ -17,9 +17,16 @@ interface Props {
   description?: string;
   /** Path to an OG image under /public, e.g. /og/home.png. Optional. */
   ogImage?: string;
+  /** Open Graph object type; blog posts pass 'article'. */
+  ogType?: 'website' | 'article';
 }
 
-const { title, description = SITE.description, ogImage = '/og/default.png' } = Astro.props;
+const {
+  title,
+  description = SITE.description,
+  ogImage = '/og/default.png',
+  ogType = 'website',
+} = Astro.props;
 const pageTitle = title ? `${title} | ${SITE.name}` : SITE.title;
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
 const ogImageUrl = ogImage ? new URL(ogImage, SITE.url).href : undefined;
@@ -39,7 +46,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, ''); // '' on the custom do
     <link rel="manifest" href={`${base}/site.webmanifest`} />
     <meta name="theme-color" content="#f5f2ec" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#16181a" media="(prefers-color-scheme: dark)" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="sitemap" href={`${base}/sitemap-index.xml`} />
     <link rel="canonical" href={canonical} />
 
     <title>{pageTitle}</title>
@@ -47,7 +54,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, ''); // '' on the custom do
     <meta name="author" content={SITE.author} />
 
     <!-- Open Graph -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />

@@ -31,7 +31,7 @@ const categories = projectCategories.filter((c) => used.has(c));
         type="button"
         data-filter="all"
         aria-pressed="true"
-        class="filter-btn rounded-full border border-[var(--accent)] bg-[var(--accent)] px-3 py-1 text-sm text-white"
+        class="filter-btn rounded-full border border-[var(--accent)] bg-[var(--accent)] px-3 py-1 text-sm text-white dark:text-[#16181a]"
       >
         All
       </button>
@@ -67,7 +67,7 @@ const categories = projectCategories.filter((c) => used.has(c));
     const buttons = Array.from(document.querySelectorAll('.filter-btn'));
     const items = Array.from(document.querySelectorAll('.project-item'));
     const empty = document.getElementById('no-results');
-    const activeCls = ['border-[var(--accent)]', 'bg-[var(--accent)]', 'text-white'];
+    const activeCls = ['border-[var(--accent)]', 'bg-[var(--accent)]', 'text-white', 'dark:text-[#16181a]'];
     const idleCls = ['text-[var(--fg-soft)]'];
 
     function setActive(btn) {

@@ -28,7 +28,12 @@ const GISCUS_READY = false;
 const GISCUS_CATEGORY_ID = ''; // paste from giscus.app once Discussions is enabled
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description}>
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  ogType="article"
+  ogImage={post.data.heroImage?.src}
+>
   <article class="mx-auto max-w-3xl px-5 py-12">
     <a href={`${base}/blog/`} class="label-mark hover:text-[var(--accent)]">&larr; All posts</a>
 

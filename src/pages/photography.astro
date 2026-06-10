@@ -3,13 +3,34 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const photos = [
-  { src: `${base}/images/photography/photo-01.jpg`, alt: 'Photograph by David Southworth' },
-  { src: `${base}/images/photography/photo-02.jpg`, alt: 'Photograph by David Southworth' },
-  { src: `${base}/images/photography/photo-03.jpg`, alt: "Rita McBride's art in Toxteth Reservoir" },
-  { src: `${base}/images/photography/photo-04.jpg`, alt: 'Photograph by David Southworth' },
-  { src: `${base}/images/photography/photo-05.jpg`, alt: 'Aerial photograph by David Southworth' },
-  { src: `${base}/images/photography/photo-06.jpg`, alt: 'Photograph by David Southworth' },
-  { src: `${base}/images/photography/photo-07.jpg`, alt: 'Photograph by David Southworth' },
+  {
+    src: `${base}/images/photography/photo-01.jpg`,
+    alt: 'Long pedestrian tunnel with moving walkways, a traveller with a suitcase walking away down the centre under curved white ceiling panels',
+  },
+  {
+    src: `${base}/images/photography/photo-02.jpg`,
+    alt: 'Waves breaking over dark rocks on a rugged shoreline under a heavy grey-blue sky',
+  },
+  {
+    src: `${base}/images/photography/photo-03.jpg`,
+    alt: "Green laser beams criss-crossing between cast-iron columns in the dark interior of Toxteth Reservoir, part of Rita McBride's installation",
+  },
+  {
+    src: `${base}/images/photography/photo-04.jpg`,
+    alt: 'Miniature railway wagon beside a leaf-strewn path, with an arched viaduct and a golden autumn sunset behind the trees',
+  },
+  {
+    src: `${base}/images/photography/photo-05.jpg`,
+    alt: 'Aerial view at dusk of a lake winding between wooded hills, with a path curving through parkland in the foreground',
+  },
+  {
+    src: `${base}/images/photography/photo-06.jpg`,
+    alt: 'Staircase sculpted in translucent red fabric, suspended beneath a gallery ceiling and lit from above',
+  },
+  {
+    src: `${base}/images/photography/photo-07.jpg`,
+    alt: 'Weathered wooden ribs of an old shipwreck emerging from wet sand at low tide, under a pale overcast sky',
+  },
 ];
 ---
 
@@ -49,13 +70,5 @@ const photos = [
       }
     </div>
 
-    <p class="mt-10 text-sm text-[var(--fg-soft)]">
-      More images to come. Recent work also on
-      <a
-        href="https://www.instagram.com/david_j_southworth/"
-        class="text-[var(--accent)] underline underline-offset-2"
-        >Instagram</a
-      >.
-    </p>
   </section>
 </BaseLayout>
