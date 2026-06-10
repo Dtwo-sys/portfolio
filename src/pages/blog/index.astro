@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const isProd = import.meta.env.PROD;
@@ -30,12 +31,25 @@ const fmt = (d: Date) =>
         <ul class="mt-10 divide-y divide-[var(--rule)]">
           {posts.map((post) => (
             <li class="py-5">
-              <a href={`${base}/blog/${post.id}/`} class="group block">
-                <time class="label-mark" datetime={post.data.pubDate.toISOString()}>
-                  {fmt(post.data.pubDate)}
-                </time>
-                <h2 class="mt-1 text-xl group-hover:text-[var(--accent)]">{post.data.title}</h2>
-                <p class="mt-1 text-[var(--fg-soft)]">{post.data.description}</p>
+              <a href={`${base}/blog/${post.id}/`} class="group flex gap-5">
+                {post.data.heroImage && (
+                  <div class="hidden flex-none sm:block">
+                    <Image
+                      src={post.data.heroImage}
+                      alt={post.data.heroImageAlt || post.data.title}
+                      width={144}
+                      height={96}
+                      class="h-24 w-36 rounded-lg object-cover"
+                    />
+                  </div>
+                )}
+                <div class="min-w-0 flex-1">
+                  <time class="label-mark" datetime={post.data.pubDate.toISOString()}>
+                    {fmt(post.data.pubDate)}
+                  </time>
+                  <h2 class="mt-1 text-xl group-hover:text-[var(--accent)]">{post.data.title}</h2>
+                  <p class="mt-1 text-[var(--fg-soft)]">{post.data.description}</p>
+                </div>
               </a>
             </li>
           ))}
