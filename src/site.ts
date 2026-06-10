@@ -20,7 +20,7 @@ export const NAV: { label: string; href: string }[] = [
   { label: 'Projects', href: '/projects/' },
   { label: 'Photography', href: '/photography/' },
   { label: 'About', href: '/about/' },
-  { label: 'Notes', href: '/notes/' },
+  { label: 'Blog', href: '/blog/' },
   { label: 'Contact', href: '/contact/' },
 ];
 
