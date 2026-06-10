@@ -17,6 +17,9 @@ image: '../../assets/images/projects/uncertaintycalc/home.jpg'
 imageAlt: 'Screenshot of the UncertaintyCalc web application'
 ---
 
+import { Image } from 'astro:assets';
+import calcImg from '../../assets/images/projects/uncertaintycalc/uct-calc.png';
+
 ## Context
 
 UncertaintyCalc was built during a hackathon in summer 2025. Measurement uncertainty is one of the harder ideas in metrology to communicate. The arithmetic is not difficult, but assembling a defensible uncertainty budget (identifying the contributions, combining them correctly, and reporting the result honestly) trips up people who are otherwise comfortable with their instruments. UncertaintyCalc grew out of more than forty years working in temperature calibration, where I saw the same gaps appear again and again.
@@ -26,11 +29,9 @@ UncertaintyCalc was built during a hackathon in summer 2025. Measurement uncerta
 A web application that walks through an uncertainty calculation in plain terms, so the figure at the end is one the user can stand behind rather than one a spreadsheet produced quietly in the background.
 
 <div class="not-prose my-8">
-  <img
-    src="/images/projects/uncertaintycalc/uct-calc.png"
+  <Image
+    src={calcImg}
     alt="UncertaintyCalc running in a laptop browser, showing a completed dry-block temperature calibrator uncertainty budget with individual contributions listed and a combined uncertainty result of 1.21 °C displayed at the foot of the page"
-    width="1200"
-    height="750"
     class="w-full rounded-xl shadow-lg"
   />
 </div>

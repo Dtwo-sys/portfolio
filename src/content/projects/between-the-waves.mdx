@@ -17,6 +17,9 @@ image: '../../assets/images/projects/between-the-waves/hero.jpg'
 imageAlt: 'Northumberland coast, the landscape behind Between the Waves'
 ---
 
+import { Image } from 'astro:assets';
+import featuresImg from '../../assets/images/projects/between-the-waves/features.jpg';
+
 ## Context
 
 Between the Waves came out of a long mindfulness practice and counselling training. The aim was a meditation app with nothing in the way: no account to create, no subscription to weigh up, no tracking running quietly underneath. You open it and you press play.
@@ -35,11 +38,9 @@ A free guided-meditation web app, installable as a progressive web app, offering
 Companion poems from *Liminal Light* and Northumberland coast photography run throughout, so the app draws the writing, the images and the practice into one place.
 
 <div class="not-prose my-10">
-  <img
-    src="/images/projects/between-the-waves/features.jpg"
+  <Image
+    src={featuresImg}
     alt="Between the Waves — a simple place for stillness, with no streaks, no notifications and no tracking"
-    width="1600"
-    height="900"
     class="w-full rounded-xl shadow-lg"
   />
 </div>

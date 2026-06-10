@@ -18,6 +18,10 @@ image: '../../assets/images/projects/liminal-light/cover.jpg'
 imageAlt: 'Book cover for Liminal Light, a poetry collection by David Southworth'
 ---
 
+import { Image } from 'astro:assets';
+import bookCover from '../../assets/images/projects/liminal-light/liminal-light-book-cover.png';
+import amazonBadge from '../../assets/images/projects/liminal-light/amazon-buy-link.webp';
+
 ## Context
 
 Liminal Light was written to mark a 60th birthday: a collection of poems exploring themes of place, presence and change. Coastal imagery runs through it alongside personal reflection; the book captures moments of stillness, transition and hope. It is a deeply personal project and an example of carrying a creative idea through to print via self-publishing.
@@ -37,17 +41,15 @@ Writer and self-publisher. The poems are entirely my own words.
 Published in 2024. A companion website is live at [poetry.davidsouthworth.net](https://poetry.davidsouthworth.net/).
 
 <div class="not-prose my-10 flex justify-center">
-  <img
-    src="/images/projects/liminal-light/liminal-light-book-cover.png"
+  <Image
+    src={bookCover}
     alt="Liminal Light by David Southworth — book cover"
-    width="500"
-    height="600"
     class="w-52 sm:w-72 drop-shadow-2xl"
   />
 </div>
 
 <a href="https://amzn.to/46663tp" target="_blank" rel="noopener noreferrer" class="not-prose mt-4 inline-block transition-opacity hover:opacity-80">
-  <img src="/images/projects/liminal-light/amazon-buy-link.webp" alt="Available at Amazon" width="200" height="60" class="h-12 w-auto dark:bg-white dark:rounded dark:px-3 dark:py-1" />
+  <Image src={amazonBadge} alt="Available at Amazon" class="h-12 w-auto dark:bg-white dark:rounded dark:px-3 dark:py-1" />
 </a>
 
 > "David has crafted something really special; the poetry and images work beautifully together, every page is a piece of art."
