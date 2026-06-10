@@ -7,7 +7,7 @@ the brand blue on dark, keeping the tan '2' untouched.
 import numpy as np
 from PIL import Image
 
-BLUE = (26, 74, 143)  # deep royal blue: near the navy, still legible on dark
+BLUE = (18, 58, 115)  # closer to navy, still legible on #16181a dark surface
 LOGO = r"g:\My Drive\claude_code\calibratedideas\public\images\logo"
 
 
