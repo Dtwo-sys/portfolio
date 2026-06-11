@@ -16,7 +16,6 @@ const projectCategories = [
   'Creative projects',
   'Radio / hobby projects',
   'Photography / poetry',
-  'Client work',
 ] as const;
 
 const projects = defineCollection({
