@@ -1,6 +1,10 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { SITE } from '../site';
+import Schema from '../components/Schema.astro';
+import { SITE, personSchema } from '../site';
+import publishedPW from '../assets/images/about/published-practical-wireless.jpg';
+import publishedMetrology from '../assets/images/about/published-metrology.jpg';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
@@ -9,6 +13,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   title="About"
   description="David Southworth (D2): over forty years in temperature metrology, technical writing, AI tools, web and mobile work, photography and reflective practice."
 >
+  <Schema slot="head" schema={personSchema(Astro.site)} />
   <article class="mx-auto max-w-3xl px-5 py-12">
     <p class="label-mark">About</p>
     <h1 class="mt-3 text-4xl sm:text-5xl">David Southworth</h1>
@@ -68,18 +73,18 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <em>Practical Wireless</em>, <em>Instrumentation Monthly</em> and <em>Cal Lab: The International Journal of Metrology</em>.
       </p>
       <div class="not-prose mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <img
-          src={`${base}/images/about/published-practical-wireless.jpg`}
+        <Image
+          src={publishedPW}
           alt="Practical Wireless magazine, featuring an article by David Southworth"
-          loading="lazy"
-          decoding="async"
+          widths={[400, 800]}
+          sizes="(max-width: 640px) 100vw, 360px"
           class="w-full rounded-xl"
         />
-        <img
-          src={`${base}/images/about/published-metrology.jpg`}
+        <Image
+          src={publishedMetrology}
           alt="Cal Lab, MEPCA and Instrumentation Monthly magazines featuring articles by David Southworth"
-          loading="lazy"
-          decoding="async"
+          widths={[400, 800]}
+          sizes="(max-width: 640px) 100vw, 360px"
           class="w-full rounded-xl"
         />
       </div>

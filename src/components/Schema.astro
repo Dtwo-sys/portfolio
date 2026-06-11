@@ -1,0 +1,14 @@
+---
+/*
+  JSON-LD structured data. Rendered with set:html from JSON.stringify, with
+  `<` escaped so the payload can never break out of the script element.
+*/
+interface Props {
+  schema: Record<string, unknown>;
+}
+
+const { schema } = Astro.props;
+const json = JSON.stringify(schema).replace(/</g, '\\u003c');
+---
+
+<script type="application/ld+json" set:html={json} />

@@ -4,9 +4,12 @@ import type { CollectionEntry } from 'astro:content';
 
 interface Props {
   project: CollectionEntry<'projects'>;
+  /** Card title heading level; pages whose cards sit directly under the h1 pass 'h2'. */
+  headingLevel?: 'h2' | 'h3';
 }
 
-const { project } = Astro.props;
+const { project, headingLevel = 'h3' } = Astro.props;
+const Heading = headingLevel;
 const { data } = project;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const href = `${base}/projects/${project.id}/`;
@@ -40,7 +43,7 @@ const tags = data.categories.slice(0, 3);
 
   <div class="flex flex-1 flex-col gap-2 p-5">
     <div class="flex items-baseline justify-between gap-3">
-      <h3 class="font-display text-xl group-hover:text-[var(--accent)]">{data.title}</h3>
+      <Heading class="font-display text-xl group-hover:text-[var(--accent)]">{data.title}</Heading>
     </div>
     <p class="label-mark">{data.type}</p>
     <p class="text-sm text-[var(--fg-soft)]">{data.summary}</p>

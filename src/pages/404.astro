@@ -1,8 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
-<BaseLayout title="Page not found">
+<BaseLayout title="Page not found" description="That page isn't here. The reading is out of range.">
   <section class="mx-auto max-w-2xl px-5 py-28 text-center">
     <p class="label-mark">Error 404</p>
     <h1 class="mt-3 text-4xl sm:text-5xl">Off the scale</h1>
@@ -10,10 +12,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       That page isn't here. The reading is out of range.
     </p>
     <a
-      href={import.meta.env.BASE_URL}
+      href={`${base}/`}
       class="mt-8 inline-block rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 dark:text-[#16181a]"
     >
       Back to home
     </a>
+    <p class="mt-6 text-sm text-[var(--fg-soft)]">
+      Or try <a href={`${base}/projects/`} class="text-[var(--accent)] underline underline-offset-2">Projects</a>,
+      <a href={`${base}/blog/`} class="text-[var(--accent)] underline underline-offset-2">Blog</a> or
+      <a href={`${base}/about/`} class="text-[var(--accent)] underline underline-offset-2">About</a>.
+    </p>
   </section>
 </BaseLayout>

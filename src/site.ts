@@ -35,3 +35,18 @@ export const SOCIAL: { label: string; href: string }[] = [
   { label: 'Instagram', href: 'https://www.instagram.com/david_j_southworth/' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/david-southworth/' },
 ];
+
+/*
+  Person structured data, shared by the home and About pages. `site` is the
+  per-target Astro.site so the URL is correct for preview and production.
+*/
+export function personSchema(site: URL | undefined) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: SITE.author,
+    url: site ? new URL(import.meta.env.BASE_URL, site).href : SITE.url,
+    email: `mailto:${SITE.email}`,
+    sameAs: SOCIAL.filter((s) => s.href.startsWith('https://')).map((s) => s.href),
+  };
+}

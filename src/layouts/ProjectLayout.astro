@@ -1,8 +1,10 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
 import AppStoreBadge from '../components/AppStoreBadge.astro';
+import Schema from '../components/Schema.astro';
+import { SITE } from '../site';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -12,9 +14,45 @@ const { project } = Astro.props;
 const { data } = project;
 const hasStore = data.links.appStore || data.links.playStore;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Social-card image from the project hero, processed so the URL is guaranteed
+// to exist in the build (JPEG for platform compatibility).
+const ogImage = data.image
+  ? (await getImage({ src: data.image, width: 1200, format: 'jpeg' })).src
+  : undefined;
+
+// Structured data, built only from frontmatter facts. An App Store link marks
+// the project as a shipped iOS application; everything else is a CreativeWork.
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const author = {
+  '@type': 'Person',
+  name: SITE.author,
+  url: new URL(`${base}/about/`, Astro.site).href,
+};
+const projectSchema = data.links.appStore
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: data.title,
+      description: data.summary,
+      operatingSystem: 'iOS',
+      installUrl: data.links.appStore,
+      url: canonical,
+      author,
+    }
+  : {
+      '@context': 'https://schema.org',
+      '@type': 'CreativeWork',
+      name: data.title,
+      description: data.summary,
+      url: data.links.live || canonical,
+      mainEntityOfPage: canonical,
+      author,
+    };
 ---
 
-<BaseLayout title={data.title} description={data.summary}>
+<BaseLayout title={data.title} description={data.summary} ogImage={ogImage}>
+  <Schema slot="head" schema={projectSchema} />
   <article class="mx-auto max-w-3xl px-5 py-12">
     <a href={`${base}/projects/`} class="label-mark hover:text-[var(--accent)]">&larr; All projects</a>
 
@@ -57,6 +95,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           alt={data.imageAlt || data.title}
           widths={[600, 1000, 1400]}
           sizes="(max-width: 768px) 100vw, 768px"
+          loading="eager"
           class="mt-8 w-full rounded-xl border border-[var(--rule)]"
         />
       )
@@ -85,6 +124,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           alt={data.imageAlt || data.title}
           widths={[600, 1000, 1400]}
           sizes="(max-width: 768px) 100vw, 768px"
+          loading="eager"
           class="mt-8 w-full rounded-xl border border-[var(--rule)]"
         />
       )

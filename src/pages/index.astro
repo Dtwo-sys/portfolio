@@ -2,7 +2,8 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import { SITE } from '../site';
+import Schema from '../components/Schema.astro';
+import { SITE, personSchema } from '../site';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const projects = await getCollection('projects');
@@ -13,13 +14,15 @@ const featured = projects
 ---
 
 <BaseLayout>
+  <Schema slot="head" schema={personSchema(Astro.site)} />
   <!-- Hero -->
   <section class="relative border-b border-[var(--rule)]">
     <div class="bg-graph pointer-events-none absolute inset-0 opacity-50" aria-hidden="true"></div>
     <div class="relative mx-auto max-w-5xl px-5 py-20 sm:py-28">
       <div class="flex flex-col-reverse items-center gap-12 sm:flex-row sm:items-center sm:justify-between">
         <div class="flex-1">
-          <h1 class="max-w-2xl text-4xl leading-tight sm:text-6xl">
+          <p class="label-mark">Exact things, inexact things, and the gap between them.</p>
+          <h1 class="mt-4 max-w-2xl text-4xl leading-tight sm:text-6xl">
             Digital projects, technical writing and creative tools, made with precision and presence.
           </h1>
           <p class="mt-6 max-w-xl text-lg text-[var(--fg-soft)]">
@@ -40,6 +43,10 @@ const featured = projects
               Read about me
             </a>
           </div>
+          <p class="mt-6 text-sm text-[var(--fg-soft)]">
+            Published in <em>Cal Lab</em>, <em>Instrumentation Monthly</em> and
+            <em>Practical Wireless</em>.
+          </p>
         </div>
         <div class="relative flex-shrink-0 self-center">
           {/* Light mode: clean static logo. */}

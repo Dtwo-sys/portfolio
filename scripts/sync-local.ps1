@@ -58,7 +58,11 @@ try {
     npm install
   }
   if ($Build) {
-    Write-Host "Running npm run build (local) ..." -ForegroundColor Cyan
+    # This script is the production (Hostinger) build path: root base, real
+    # domain. The GitHub Pages preview is built by CI with its own settings.
+    $env:PUBLIC_BASE_PATH = '/'
+    $env:PUBLIC_SITE_URL = 'https://calibratedideas.com'
+    Write-Host "Running npm run build (local, production base '/') ..." -ForegroundColor Cyan
     npm run build
     Write-Host "Build complete. Run with -Back to copy dist/ to Drive." -ForegroundColor Green
   }

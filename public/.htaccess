@@ -1,0 +1,9 @@
+# Calibrated Ideas - minimal Apache/LiteSpeed config for static hosting.
+# This file ships in dist/ and must be uploaded with the rest of the build.
+
+# Serve Astro's custom 404 page (built to /404.html).
+ErrorDocument 404 /404.html
+
+# Canonical URL form: directory URLs end with a trailing slash. Apache's
+# mod_dir (DirectorySlash On, the default) already 301-redirects /about to
+# /about/, so no rewrite rules are needed for that.

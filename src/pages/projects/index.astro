@@ -53,7 +53,7 @@ const categories = projectCategories.filter((c) => used.has(c));
       {
         projects.map((project) => (
           <div class="project-item" data-categories={project.data.categories.join('|')}>
-            <ProjectCard project={project} />
+            <ProjectCard project={project} headingLevel="h2" />
           </div>
         ))
       }

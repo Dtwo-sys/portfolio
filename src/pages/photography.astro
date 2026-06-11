@@ -1,34 +1,41 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import photo01 from '../assets/images/photography/photo-01.jpg';
+import photo02 from '../assets/images/photography/photo-02.jpg';
+import photo03 from '../assets/images/photography/photo-03.jpg';
+import photo04 from '../assets/images/photography/photo-04.jpg';
+import photo05 from '../assets/images/photography/photo-05.jpg';
+import photo06 from '../assets/images/photography/photo-06.jpg';
+import photo07 from '../assets/images/photography/photo-07.jpg';
 
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const photos = [
   {
-    src: `${base}/images/photography/photo-01.jpg`,
+    src: photo01,
     alt: 'Long pedestrian tunnel with moving walkways, a traveller with a suitcase walking away down the centre under curved white ceiling panels',
   },
   {
-    src: `${base}/images/photography/photo-02.jpg`,
+    src: photo02,
     alt: 'Waves breaking over dark rocks on a rugged shoreline under a heavy grey-blue sky',
   },
   {
-    src: `${base}/images/photography/photo-03.jpg`,
+    src: photo03,
     alt: "Green laser beams criss-crossing between cast-iron columns in the dark interior of Toxteth Reservoir, part of Rita McBride's installation",
   },
   {
-    src: `${base}/images/photography/photo-04.jpg`,
+    src: photo04,
     alt: 'Miniature railway wagon beside a leaf-strewn path, with an arched viaduct and a golden autumn sunset behind the trees',
   },
   {
-    src: `${base}/images/photography/photo-05.jpg`,
+    src: photo05,
     alt: 'Aerial view at dusk of a lake winding between wooded hills, with a path curving through parkland in the foreground',
   },
   {
-    src: `${base}/images/photography/photo-06.jpg`,
+    src: photo06,
     alt: 'Staircase sculpted in translucent red fabric, suspended beneath a gallery ceiling and lit from above',
   },
   {
-    src: `${base}/images/photography/photo-07.jpg`,
+    src: photo07,
     alt: 'Weathered wooden ribs of an old shipwreck emerging from wet sand at low tide, under a pale overcast sky',
   },
 ];
@@ -58,11 +65,11 @@ const photos = [
       {
         photos.map((photo) => (
           <div class="overflow-hidden rounded-lg bg-[var(--bg-soft)] aspect-square">
-            <img
+            <Image
               src={photo.src}
               alt={photo.alt}
-              loading="lazy"
-              decoding="async"
+              widths={[400, 800]}
+              sizes="(max-width: 640px) 50vw, 360px"
               class="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.04]"
             />
           </div>
