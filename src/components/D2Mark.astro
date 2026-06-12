@@ -53,11 +53,11 @@ const ticks = [
 ];
 ---
 
+{/* No width/height attributes: sizing belongs to each caller's CSS, and the
+    aspect-ratio rule below reserves the box before paint (zero CLS). */}
 <svg
   xmlns="http://www.w3.org/2000/svg"
   viewBox="0 0 481 471"
-  width="481"
-  height="471"
   class:list={['d2-mark', className]}
   data-animate={animate ? '' : undefined}
   role={decorative ? undefined : 'img'}
@@ -135,6 +135,7 @@ const ticks = [
 <style>
   .d2-mark {
     display: block;
+    aspect-ratio: 481 / 471;
     --d2-ease: cubic-bezier(0.4, 0, 0.2, 1);
   }
 

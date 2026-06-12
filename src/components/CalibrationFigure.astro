@@ -1,0 +1,429 @@
+---
+/*
+  The Calibration: a contained canvas figure for the About page.
+
+  Three rings of engraved tick marks drift in gentle disorder. A slow
+  sweep of furnace light passes over them; every tick it touches snaps
+  into alignment, then relaxes back towards noise until the next pass.
+  A hairline needle takes a discrete reading every few seconds with an
+  underdamped spring settle, the way a real indicating instrument comes
+  to rest. Order is imposed, drift returns: a calibration interval.
+
+  Palette is the site's own: night surfaces, paper-tone ticks, and the
+  brand gold from the D2 mark for the sweep and needle tip.
+
+  Behaviour: animates only while visible (IntersectionObserver), has a
+  pause control (WCAG 2.2.2), and renders a single perfectly calibrated
+  still under prefers-reduced-motion.
+*/
+---
+
+<figure
+  class="calibration-figure relative m-0 overflow-hidden rounded-xl border border-[var(--rule)]"
+>
+  <div
+    class="cal-stage relative w-full"
+    role="img"
+    aria-label="Animated instrument dial: rings of tick marks drift out of alignment, a slow pass of light calibrates them, and a needle settles on each new reading."
+  >
+    <canvas class="cal-canvas" aria-hidden="true"></canvas>
+    <canvas class="cal-grain" aria-hidden="true"></canvas>
+  </div>
+  {/* Outside the role="img" region so it stays in the accessibility tree. */}
+  <button
+    type="button"
+    class="cal-toggle label-mark absolute top-3 right-3 rounded-full border border-[#34373a] bg-[#16181a]/70 px-3 py-1 text-[#c8c4ba] backdrop-blur-sm transition-colors hover:text-[#f5f2ec]"
+    aria-pressed="false"
+  >
+    Pause
+  </button>
+  <figcaption
+    class="label-mark border-t border-[var(--rule)] bg-[var(--bg-soft)] px-4 py-2.5"
+  >
+    Calibrated Ideas in Motion
+    <br />
+    <span class="text-[0.75em] opacity-60">© 2026 David Southworth</span>
+  </figcaption>
+</figure>
+
+<style>
+  .cal-stage {
+    aspect-ratio: 16 / 10;
+    background: #16181a;
+  }
+  .cal-canvas,
+  .cal-grain {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cal-toggle {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // One figure per page is assumed; query within the component root class.
+  const figure = document.querySelector<HTMLElement>('.calibration-figure');
+  if (figure) initCalibration(figure);
+
+  function initCalibration(root: HTMLElement) {
+    const stage = root.querySelector<HTMLCanvasElement>('.cal-canvas')!;
+    const grain = root.querySelector<HTMLCanvasElement>('.cal-grain')!;
+    const toggle = root.querySelector<HTMLButtonElement>('.cal-toggle')!;
+    const box = stage.parentElement as HTMLElement;
+    const ctx = stage.getContext('2d')!;
+    const gctx = grain.getContext('2d')!;
+
+    /* ---------- palette (site tokens and brand gold) ---------- */
+    const PAPER = [245, 242, 236]; // calibrated ticks
+    const PAPER_DIM = [200, 196, 186]; // drifting ticks
+    const GOLD = [205, 163, 125]; // the D2 mark's gold
+    const NIGHT_SOFT = [32, 35, 38];
+
+    const rgba = (c: number[], a: number) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+    const mix3 = (c1: number[], c2: number[], t: number) => [
+      lerp(c1[0], c2[0], t) | 0,
+      lerp(c1[1], c2[1], t) | 0,
+      lerp(c1[2], c2[2], t) | 0,
+    ];
+    const TAU = Math.PI * 2;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ---------- stage ---------- */
+    let W = 0,
+      H = 0,
+      CX = 0,
+      CY = 0,
+      R = 0;
+
+    function resize() {
+      const rect = box.getBoundingClientRect();
+      if (rect.width === 0) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = rect.width;
+      H = rect.height;
+      stage.width = Math.round(W * dpr);
+      stage.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      CX = W * 0.5;
+      CY = H * 0.52;
+      R = Math.min(H * 0.42, W * 0.3);
+      buildGrain();
+      if (reduceMotion || paused) drawFrame(lastTime, reduceMotion);
+    }
+
+    /* ---------- tick rings ---------- */
+    // Densities like a real engraved bezel: fine outer graduation,
+    // coarser inner ones. Every Nth tick is a major.
+    const RINGS = [
+      { rr: 1.0, count: 144, len: 0.06, major: 6, majorLen: 0.105 },
+      { rr: 0.8, count: 96, len: 0.048, major: 8, majorLen: 0.085 },
+      { rr: 0.58, count: 60, len: 0.04, major: 10, majorLen: 0.072 },
+    ];
+
+    interface Tick {
+      ring: (typeof RINGS)[number];
+      angle: number;
+      isMajor: boolean;
+      align: number; // 0 = drifting noise, 1 = perfectly calibrated
+      heat: number; // brief warm glow as the sweep passes
+      pA: number; sA: number; // per-tick drift signature
+      pL: number; sL: number;
+      pO: number; sO: number;
+      ampA: number;
+      ampL: number;
+    }
+    const ticks: Tick[] = [];
+    for (const ring of RINGS) {
+      for (let i = 0; i < ring.count; i++) {
+        ticks.push({
+          ring,
+          angle: (i / ring.count) * TAU,
+          isMajor: i % ring.major === 0,
+          align: 0,
+          heat: 0,
+          pA: Math.random() * TAU, sA: 0.25 + Math.random() * 0.35,
+          pL: Math.random() * TAU, sL: 0.2 + Math.random() * 0.3,
+          pO: Math.random() * TAU, sO: 0.15 + Math.random() * 0.25,
+          ampA: 0.02 + Math.random() * 0.03,
+          ampL: 0.3 + Math.random() * 0.45,
+        });
+      }
+    }
+
+    /* ---------- sweep ---------- */
+    const SWEEP_PERIOD = 16; // seconds per revolution
+    const SWEEP_SIGMA = 0.1; // angular width of the ordering window
+    const ALIGN_DECAY = 10.0; // seconds for entropy to return
+    const HEAT_DECAY = 0.9; // seconds of warm afterglow
+
+    const angDiff = (a: number, b: number) => {
+      let d = (a - b) % TAU;
+      if (d > Math.PI) d -= TAU;
+      if (d < -Math.PI) d += TAU;
+      return d;
+    };
+
+    /* ---------- needle: discrete readings, damped settle ---------- */
+    const needle = {
+      angle: -TAU / 12,
+      vel: 0,
+      target: -TAU / 12,
+      nextReading: 2.0,
+      k: 38, // stiffness
+      c: 6.8, // damping (underdamped: slight overshoot, then rest)
+    };
+
+    /* ---------- drawing ---------- */
+    function drawAtmosphere() {
+      const bg = ctx.createRadialGradient(CX, CY, R * 0.2, CX, CY, Math.max(W, H) * 0.75);
+      bg.addColorStop(0, rgba(NIGHT_SOFT, 1));
+      bg.addColorStop(1, 'rgba(22,24,26,1)');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, W, H);
+      // faint warm breath behind the instrument
+      const g = ctx.createRadialGradient(CX, CY, R * 0.1, CX, CY, R * 1.9);
+      g.addColorStop(0, rgba(GOLD, 0.05));
+      g.addColorStop(0.5, rgba(GOLD, 0.013));
+      g.addColorStop(1, rgba(GOLD, 0));
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    function drawReferenceCircles() {
+      ctx.lineWidth = 1;
+      for (const rr of [0.9, 0.69, 0.47]) {
+        ctx.beginPath();
+        ctx.arc(CX, CY, R * rr, 0, TAU);
+        ctx.strokeStyle = rgba(PAPER, 0.07);
+        ctx.stroke();
+      }
+    }
+
+    function drawTick(t: Tick, time: number, frozen: boolean) {
+      const baseR = R * t.ring.rr;
+      const baseLen = R * (t.isMajor ? t.ring.majorLen : t.ring.len);
+
+      const a = frozen ? 1 : t.align;
+      const noise = 1 - a;
+
+      // organic drift, suppressed as alignment rises
+      const jA = frozen ? 0 : Math.sin(time * t.sA + t.pA) * t.ampA * noise;
+      const jL = frozen ? 0 : Math.sin(time * t.sL + t.pL) * t.ampL * noise;
+      const jR = frozen ? 0 : Math.sin(time * t.sO + t.pO) * R * 0.012 * noise;
+
+      const ang = t.angle + jA;
+      const len = baseLen * (1 + jL);
+      const r0 = baseR + jR;
+      const r1 = r0 - len;
+      const cos = Math.cos(ang),
+        sin = Math.sin(ang);
+
+      // drifting ticks are faint; calibrated ticks crisp
+      const baseAlpha = t.isMajor ? 0.22 : 0.13;
+      const alpha =
+        lerp(baseAlpha, t.isMajor ? 0.92 : 0.72, a) *
+        (frozen ? 1 : 0.85 + 0.15 * Math.sin(time * t.sO + t.pO));
+
+      const col = mix3(mix3(PAPER_DIM, PAPER, a), GOLD, frozen ? 0 : t.heat);
+
+      ctx.beginPath();
+      ctx.moveTo(CX + cos * r0, CY + sin * r0);
+      ctx.lineTo(CX + cos * r1, CY + sin * r1);
+      ctx.lineWidth = t.isMajor ? 1.6 : 1;
+      ctx.strokeStyle = rgba(col, Math.min(1, alpha + t.heat * 0.4));
+      ctx.stroke();
+    }
+
+    function drawSweep(sweepAngle: number) {
+      // soft light arc with a fading trail, never a hard radar wedge
+      const rOut = R * 1.06;
+      const trail = 0.85;
+      const steps = 26;
+      for (let i = 0; i < steps; i++) {
+        const f = i / steps;
+        const a0 = sweepAngle - f * trail;
+        const a1 = sweepAngle - (f + 1 / steps) * trail;
+        ctx.beginPath();
+        ctx.arc(CX, CY, rOut, a1, a0);
+        ctx.lineWidth = 2.2;
+        ctx.strokeStyle = rgba(GOLD, 0.2 * Math.pow(1 - f, 2.2));
+        ctx.stroke();
+      }
+      // the comet head
+      const hx = CX + Math.cos(sweepAngle) * rOut;
+      const hy = CY + Math.sin(sweepAngle) * rOut;
+      const g = ctx.createRadialGradient(hx, hy, 0, hx, hy, R * 0.085);
+      g.addColorStop(0, rgba(GOLD, 0.85));
+      g.addColorStop(0.35, rgba(GOLD, 0.25));
+      g.addColorStop(1, rgba(GOLD, 0));
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(hx, hy, R * 0.085, 0, TAU);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255,238,217,0.9)';
+      ctx.beginPath();
+      ctx.arc(hx, hy, 1.6, 0, TAU);
+      ctx.fill();
+    }
+
+    function drawNeedle(angle: number) {
+      const tipR = R * 0.4;
+      const tailR = R * 0.1;
+      const cos = Math.cos(angle),
+        sin = Math.sin(angle);
+
+      // tail counterweight
+      ctx.beginPath();
+      ctx.moveTo(CX, CY);
+      ctx.lineTo(CX - cos * tailR, CY - sin * tailR);
+      ctx.lineWidth = 2.4;
+      ctx.strokeStyle = rgba(PAPER_DIM, 0.6);
+      ctx.stroke();
+
+      // blade: paper body fading to a gold tip
+      const grad = ctx.createLinearGradient(CX, CY, CX + cos * tipR, CY + sin * tipR);
+      grad.addColorStop(0, rgba(PAPER, 0.55));
+      grad.addColorStop(0.65, rgba(PAPER, 0.85));
+      grad.addColorStop(1, rgba(GOLD, 0.95));
+      ctx.beginPath();
+      ctx.moveTo(CX, CY);
+      ctx.lineTo(CX + cos * tipR, CY + sin * tipR);
+      ctx.lineWidth = 1.4;
+      ctx.strokeStyle = grad;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(CX + cos * tipR, CY + sin * tipR, 2, 0, TAU);
+      ctx.fillStyle = rgba(GOLD, 0.95);
+      ctx.fill();
+
+      // hub: ring and centre pin
+      ctx.beginPath();
+      ctx.arc(CX, CY, 6.5, 0, TAU);
+      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = rgba(PAPER, 0.55);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(CX, CY, 2.2, 0, TAU);
+      ctx.fillStyle = rgba(GOLD, 0.9);
+      ctx.fill();
+    }
+
+    function drawFrame(time: number, frozen: boolean) {
+      ctx.clearRect(0, 0, W, H);
+      drawAtmosphere();
+      drawReferenceCircles();
+      const sweepAngle = frozen ? 0 : ((time / SWEEP_PERIOD) % 1) * TAU - Math.PI / 2;
+      for (const t of ticks) drawTick(t, time, frozen);
+      if (!frozen) drawSweep(sweepAngle);
+      drawNeedle(frozen ? -TAU / 12 : needle.angle);
+    }
+
+    /* ---------- animation loop, gated by visibility and the toggle ---------- */
+    let rafId = 0;
+    let running = false;
+    let paused = false; // user intent (the button)
+    let inView = false; // viewport state (the observer)
+    let last = 0;
+    let lastTime = 0;
+
+    function step(nowMs: number) {
+      const now = nowMs / 1000;
+      const dt = Math.min(now - last, 0.05);
+      last = now;
+      lastTime = now;
+
+      const sweepAngle = ((now / SWEEP_PERIOD) % 1) * TAU - Math.PI / 2;
+
+      // calibration: order rises under the sweep, entropy creeps back after
+      for (const t of ticks) {
+        const d = Math.abs(angDiff(sweepAngle, t.angle));
+        const w = Math.exp(-(d * d) / (2 * SWEEP_SIGMA * SWEEP_SIGMA));
+        if (w > t.align) t.align = w;
+        t.align *= Math.exp(-dt / ALIGN_DECAY);
+        if (w > t.heat) t.heat = w;
+        t.heat *= Math.exp(-dt / HEAT_DECAY);
+      }
+
+      // discrete readings: spring toward the sweep, overshoot, settle
+      needle.nextReading -= dt;
+      if (needle.nextReading <= 0) {
+        needle.target = sweepAngle;
+        needle.nextReading = 4.2 + Math.random() * 1.6;
+      }
+      const err = angDiff(needle.target, needle.angle);
+      needle.vel += (needle.k * err - needle.c * needle.vel) * dt;
+      needle.angle += needle.vel * dt;
+
+      drawFrame(now, false);
+      rafId = requestAnimationFrame(step);
+    }
+
+    function syncLoop() {
+      const shouldRun = inView && !paused && !reduceMotion;
+      if (shouldRun && !running) {
+        running = true;
+        last = performance.now() / 1000;
+        rafId = requestAnimationFrame(step);
+      } else if (!shouldRun && running) {
+        running = false;
+        cancelAnimationFrame(rafId);
+      }
+    }
+
+    toggle.addEventListener('click', () => {
+      paused = !paused;
+      toggle.setAttribute('aria-pressed', paused ? 'true' : 'false');
+      toggle.textContent = paused ? 'Play' : 'Pause';
+      syncLoop();
+    });
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        inView = entries[0].isIntersecting;
+        syncLoop();
+      },
+      { threshold: 0.1 }
+    );
+    io.observe(root);
+
+    /* ---------- grain: a quiet handmade texture ---------- */
+    function buildGrain() {
+      const gw = 160,
+        gh = 160;
+      const tile = document.createElement('canvas');
+      tile.width = gw;
+      tile.height = gh;
+      const tctx = tile.getContext('2d')!;
+      const img = tctx.createImageData(gw, gh);
+      for (let i = 0; i < img.data.length; i += 4) {
+        const v = 128 + (Math.random() - 0.5) * 255;
+        img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
+        img.data[i + 3] = 14;
+      }
+      tctx.putImageData(img, 0, 0);
+      grain.width = Math.round(W);
+      grain.height = Math.round(H);
+      gctx.globalAlpha = 0.5;
+      gctx.fillStyle = gctx.createPattern(tile, 'repeat')!;
+      gctx.fillRect(0, 0, W, H);
+    }
+
+    /* ---------- boot ---------- */
+    const ro = new ResizeObserver(resize);
+    ro.observe(box);
+    resize();
+
+    // Poster frame so the canvas is never blank before the loop starts:
+    // a calibrated still under reduced motion, a drifted still otherwise.
+    drawFrame(0, reduceMotion);
+  }
+</script>
