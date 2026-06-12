@@ -1,5 +1,6 @@
 ---
 import { SITE, NAV } from '../site';
+import D2Mark from './D2Mark.astro';
 import ThemeToggle from './ThemeToggle.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, ''); // '' on Hostinger, '/portfolio' on Pages
@@ -12,23 +13,9 @@ const isActive = (href: string) => path === href || (href !== `${base}/` && path
 >
   <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-3">
     <a href={`${base}/`} class="flex shrink-0 items-center gap-2" aria-label="Calibrated Ideas, home">
-      {/* Brand colour in both modes: navy D²+rays for the light header, a lighter blue for the dark one. */}
-      <img
-        src={`${base}/images/logo/d2-mark.png`}
-        alt=""
-        aria-hidden="true"
-        width="481"
-        height="471"
-        class="h-10 w-auto shrink-0 sm:h-11 dark:hidden"
-      />
-      <img
-        src={`${base}/images/logo/d2-mark-dark.png`}
-        alt=""
-        aria-hidden="true"
-        width="481"
-        height="471"
-        class="hidden h-10 w-auto shrink-0 sm:h-11 dark:block"
-      />
+      {/* One brand mark in both modes; --d2-ink recolours it for dark. The
+          link names the destination, so the mark itself is decorative. */}
+      <D2Mark id="header" label="" class="h-10 w-auto shrink-0 sm:h-11" />
       <span class="font-display text-xl font-semibold tracking-tight sm:text-2xl">{SITE.name}</span>
     </a>
 

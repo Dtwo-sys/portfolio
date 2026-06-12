@@ -1,0 +1,190 @@
+---
+/*
+  The D² brand mark as inline SVG — the single source of the logo for the
+  hero, header and footer. Geometry hand-traced from the original raster
+  mark (97% alpha-mask agreement; see dev/mark-check.html for the overlay).
+
+  Colour comes from --d2-ink (deep navy on light surfaces, lifted navy in
+  dark mode, defined in global.css) so one asset serves both themes. The
+  gold of the 2 is fixed brand colour, sampled from the original artwork.
+
+  With `animate`, the mark draws itself once and holds: ticks extend
+  outward in sequence, the D outlines then fills, and the gold 2 completes
+  last. Pure CSS, ~2.2 s; prefers-reduced-motion gets the finished mark
+  with no motion at all.
+*/
+interface Props {
+  /** Play the one-shot draw-on animation (hero only). */
+  animate?: boolean;
+  /** Unique suffix when the mark appears more than once per page (gradient id). */
+  id?: string;
+  class?: string;
+  /** Accessible name; pass an empty string for decorative placements. */
+  label?: string;
+}
+const {
+  animate = false,
+  id = 'mark',
+  class: className,
+  label = 'Calibrated Ideas D-squared mark',
+} = Astro.props;
+const grad = `d2-grad-${id}`;
+const decorative = label === '';
+
+// Ticks in draw order: north, anticlockwise down the left side, along the
+// bottom, then up the right towards the 2. Each path runs inner end →
+// outer end so the stroke extends outward as it draws.
+const ticks = [
+  { name: 'tick-n', d: 'M145.5 57.5 V11.5' },
+  { name: 'tick-nw2', d: 'M96.5 64.5 L81.2 39.9' },
+  { name: 'tick-nw1', d: 'M72.8 114.9 L36 92.5' },
+  { name: 'tick-w1', d: 'M72.8 165.5 H27.8' },
+  { name: 'tick-w2', d: 'M72.9 226.5 H27.9' },
+  { name: 'tick-w3', d: 'M73.5 286.6 H27.5' },
+  { name: 'tick-sw1', d: 'M72.9 336.8 L41.1 359.5' },
+  { name: 'tick-sw2', d: 'M96.5 396.2 L79.9 417' },
+  { name: 'tick-s1', d: 'M145.5 406.6 V448.6' },
+  { name: 'tick-s2', d: 'M273 423.5 V456.5' },
+  { name: 'tick-se1', d: 'M316.1 411 L325.5 444.8' },
+  { name: 'tick-se2', d: 'M355.6 388.4 L372.6 418.4' },
+  { name: 'tick-se3', d: 'M386.4 353.7 L413.4 378.7' },
+  { name: 'tick-e1', d: 'M408.8 309.5 L443.4 330.7' },
+  { name: 'tick-e2', d: 'M423.7 267.6 H459.7' },
+];
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 481 471"
+  width="481"
+  height="471"
+  class:list={['d2-mark', className]}
+  data-animate={animate ? '' : undefined}
+  role={decorative ? undefined : 'img'}
+  aria-label={decorative ? undefined : label}
+  aria-hidden={decorative ? 'true' : undefined}
+>
+  <defs>
+    <linearGradient id={grad} gradientUnits="userSpaceOnUse" x1="426" y1="66" x2="426" y2="233">
+      <stop offset="0" stop-color="#CDA37D"></stop>
+      <stop offset="0.35" stop-color="#CFAB89"></stop>
+      <stop offset="0.55" stop-color="#B3A18D"></stop>
+      <stop offset="0.72" stop-color="#56637A"></stop>
+      <stop offset="0.85" stop-color="var(--d2-ink, #02265d)"></stop>
+      <stop offset="1" stop-color="var(--d2-ink, #02265d)"></stop>
+    </linearGradient>
+  </defs>
+
+  {/* Calibration ticks: round-capped strokes, individually placed (the
+      original layout is deliberately non-radial). Decorative. */}
+  <g
+    aria-hidden="true"
+    fill="none"
+    stroke="var(--d2-ink, #02265d)"
+    stroke-width="14"
+    stroke-linecap="round"
+  >
+    {ticks.map((t, i) => (
+      <path id={t.name} class="tick" d={t.d} pathLength="100" style={`--i: ${i}`}></path>
+    ))}
+  </g>
+
+  {/* The D: filled letterform; outline drawn from measured cubics. */}
+  <path
+    id="glyph-d"
+    class="glyph"
+    style="--draw-dur: 0.9s; --draw-delay: 0.25s; --fill-delay: 1s"
+    fill="var(--d2-ink, #02265d)"
+    fill-rule="evenodd"
+    stroke="var(--d2-ink, #02265d)"
+    stroke-width="0"
+    pathLength="100"
+    d="M111 82 H220 C288 82 360.6 138 360.6 231.3 C360.6 324.6 288 380.6 220 380.6 H111 Z
+       M167.6 135.4 V328.4 H225 C254 328.4 305 286 305 232 C305 170 254 135.4 225 135.4 Z"
+  ></path>
+
+  {/* The 2: hook annulus (outer r51.3, inner r23.4 about 426,117), straight
+      diagonal, baseline bar. Gold-to-ink gradient; draws last. */}
+  <path
+    id="glyph-two"
+    class="glyph"
+    style="--draw-dur: 0.7s; --draw-delay: 1.15s; --fill-delay: 1.7s"
+    fill={`url(#${grad})`}
+    stroke={`url(#${grad})`}
+    stroke-width="0"
+    pathLength="100"
+    d="M375 122.5
+       A51.3 51.3 0 1 1 465.3 150
+       C462.1 153.8 457.7 161.3 454.3 165
+       L417.7 205
+       H477
+       A4 4 0 0 1 480.6 209
+       V229.6
+       A4 4 0 0 1 476.6 233.6
+       H381
+       A4 4 0 0 1 377 229.6
+       V209
+       A4 4 0 0 1 380.7 205
+       L440.4 142.5
+       C442.5 137.5 445.2 132.5 446.3 128.7
+       A23.4 23.4 0 1 0 403.3 122.5
+       Z"
+  ></path>
+</svg>
+
+<style>
+  .d2-mark {
+    display: block;
+    --d2-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* One-shot draw-on. All initial states live under [data-animate], so the
+     static mark (header, footer) carries no animation CSS at all. */
+  [data-animate] .tick {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: d2-draw 0.4s var(--d2-ease) both;
+    animation-delay: calc(var(--i) * 60ms);
+  }
+
+  [data-animate] .glyph {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    fill-opacity: 0;
+    stroke-width: 5;
+    animation:
+      d2-draw var(--draw-dur) var(--d2-ease) var(--draw-delay) both,
+      d2-fill 0.45s ease var(--fill-delay) both;
+  }
+
+  @keyframes d2-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes d2-fill {
+    from {
+      fill-opacity: 0;
+      stroke-opacity: 1;
+    }
+    to {
+      fill-opacity: 1;
+      stroke-opacity: 0;
+    }
+  }
+
+  /* Motion off: the finished mark, immediately. Ticks must keep their
+     stroke width (they are strokes); only the glyph outlines hide. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-animate] .tick,
+    [data-animate] .glyph {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
+    [data-animate] .glyph {
+      fill-opacity: 1;
+      stroke-width: 0;
+    }
+  }
+</style>

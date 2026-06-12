@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import D2Mark from '../components/D2Mark.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import Schema from '../components/Schema.astro';
 import { SITE, personSchema } from '../site';
@@ -48,44 +49,9 @@ const featured = projects
             <em>Practical Wireless</em>.
           </p>
         </div>
-        <div class="relative flex-shrink-0 self-center">
-          {/* Light mode: clean static logo. */}
-          <img
-            src={`${base}/images/logo/d2_logo-transp.png`}
-            alt="D² Calibrated Ideas"
-            width="320"
-            height="320"
-            class="w-56 sm:w-80 dark:hidden"
-          />
-
-          {/* Dark mode: the logo video plays once, then settles to the brand mark. */}
-          <div class="relative hidden w-56 sm:w-80 dark:block">
-            <video
-              id="hero-logo-video"
-              src={`${base}/images/about/logo-video.mp4`}
-              autoplay
-              muted
-              playsinline
-              preload="auto"
-              aria-hidden="true"
-              class="block w-full mix-blend-screen"
-              style="aspect-ratio: 1 / 1; transition: opacity 0.8s ease-out;"
-            ></video>
-            {/* Guaranteed end state: fades in when the video stops (or never plays). */}
-            <div
-              id="hero-logo-reveal"
-              class="pointer-events-none absolute inset-0 flex items-center justify-center"
-              style="opacity: 0; transition: opacity 0.9s ease-in-out;"
-            >
-              <img
-                src={`${base}/images/logo/d2_logo-transp-dark.png`}
-                alt="D² Calibrated Ideas"
-                width="320"
-                height="320"
-                class="w-56 sm:w-80"
-              />
-            </div>
-          </div>
+        <div class="flex-shrink-0 self-center">
+          {/* The brand mark draws itself on once, then holds (D2Mark.astro). */}
+          <D2Mark animate id="hero" class="h-auto w-56 sm:w-80" />
         </div>
       </div>
     </div>
@@ -134,62 +100,4 @@ const featured = projects
     </a>
   </section>
 
-  <script is:inline>
-    (() => {
-      const video = document.getElementById('hero-logo-video');
-      const reveal = document.getElementById('hero-logo-reveal');
-      if (!video || !reveal) return;
-
-      let settled = false;
-      const settle = () => {
-        if (settled) return;
-        settled = true;
-        video.style.opacity = '0';
-        reveal.style.opacity = '1';
-      };
-
-      // Respect reduced-motion: skip the animation, show the mark immediately.
-      const reduce =
-        window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (reduce) {
-        settle();
-        return;
-      }
-
-      // Settle when the clip finishes playing.
-      video.addEventListener('ended', settle);
-
-      // Cap the wait to just past the clip length once we know it; this guards
-      // against 'ended' never firing on some browsers.
-      video.addEventListener('loadedmetadata', () => {
-        const ms = (isFinite(video.duration) ? video.duration : 8) * 1000 + 1500;
-        setTimeout(settle, ms);
-      });
-
-      // iOS only allows muted autoplay when the muted *property* is set (the
-      // attribute alone is unreliable), and an immediate play() at parse time
-      // often rejects because the clip is not ready yet. So set muted, then keep
-      // trying as the video becomes ready instead of giving up on first failure.
-      video.muted = true;
-      video.playsInline = true;
-      const tryPlay = () => {
-        const p = video.play();
-        if (p && typeof p.catch === 'function') p.catch(() => {});
-      };
-      tryPlay();
-      video.addEventListener('canplay', tryPlay, { once: true });
-
-      // Only fall back to the static mark if the clip still has not started a
-      // short moment after it could play (e.g. autoplay blocked in Low Power
-      // Mode), rather than leaving a frozen first frame.
-      video.addEventListener(
-        'canplay',
-        () => setTimeout(() => { if (!settled && video.paused) settle(); }, 700),
-        { once: true }
-      );
-
-      // Absolute safety net.
-      setTimeout(settle, 12000);
-    })();
-  </script>
 </BaseLayout>

@@ -58,6 +58,9 @@
   --rule: var(--color-line);
   --accent: var(--color-tide-600);
   --muted: var(--color-muted);
+  /* Brand-mark ink (the D2 logo SVG reads this). Sampled from the original
+     raster lockups: deep navy on light surfaces, lifted navy on dark. */
+  --d2-ink: #02265d;
 }
 
 .dark {
@@ -69,6 +72,7 @@
   --accent: var(--color-tide-300);
   /* Lighter muted tone: #6b6c66 fails WCAG AA on the night surface. */
   --muted: #9a9c94;
+  --d2-ink: #123a73;
 }
 
 html {

@@ -1,5 +1,6 @@
 ---
 import { SITE, NAV, SOCIAL } from '../site';
+import D2Mark from './D2Mark.astro';
 const year = new Date().getFullYear();
 const social = SOCIAL.filter((s) => s.href);
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -10,26 +11,15 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   <div class="mx-auto max-w-5xl px-5 py-6">
     <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
       <div class="max-w-sm">
-        <a href={`${base}/`} class="inline-block" aria-label="Calibrated Ideas, home">
-          {/* Brand colour in both modes: navy lockup on light, lighter blue on dark. */}
-          {/* The link's aria-label names the destination; the paired light/dark
-              images are decorative so screen readers hear it once only. */}
-          <img
-            src={`${base}/images/logo/d2-logo-transparent.webp`}
-            alt=""
-            aria-hidden="true"
-            width="180"
-            height="60"
-            class="dark:hidden"
-          />
-          <img
-            src={`${base}/images/logo/d2-logo-transparent-dark.webp`}
-            alt=""
-            aria-hidden="true"
-            width="180"
-            height="60"
-            class="hidden dark:block"
-          />
+        <a
+          href={`${base}/`}
+          class="inline-flex items-center gap-2"
+          aria-label="Calibrated Ideas, home"
+        >
+          {/* Same inline mark as the header and hero; the link's aria-label
+              names the destination, so the mark itself is decorative. */}
+          <D2Mark id="footer" label="" class="h-12 w-auto shrink-0" />
+          <span class="font-display text-lg font-semibold tracking-tight">{SITE.name}</span>
         </a>
         <p class="mt-3 text-sm text-[var(--fg-soft)]">
           Exact things, inexact things, and the gap between them.
