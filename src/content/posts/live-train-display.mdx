@@ -1,0 +1,45 @@
+---
+title: 'Building a Live Train Display'
+description: 'A small, always-on departure board for my two nearest stations, Meols Cop and Southport. The look is there; wiring up the live Darwin data feed is the part still to crack.'
+pubDate: 2025-04-18
+heroImage: '../../assets/images/blog/live-train-display/train-display.png'
+heroImageAlt: 'A dark, dot-matrix style railway departure board for Meols Cop showing trains to Liverpool Central, Manchester Victoria and Southport, with on-time and delayed statuses in amber text'
+tags: ['web', 'node', 'trains']
+draft: false
+---
+
+There is something quietly absorbing about a railway departure board. The promise of movement, the rhythm of arrivals and departures, the small certainty of a time set against a destination. I wanted a little of that at home, so I started building a live train display.
+
+The idea was simple: a small, always-on dashboard showing real-time departures and arrivals for my two nearest stations, Meols Cop and Southport. As these things tend to, it grew into something more layered, a quiet conversation between technology, design and daily life.
+
+## The build
+
+At its heart is a Node.js application meant to connect to the Darwin Push Port, the service that streams live UK rail data. The foundations are there: the server, the dashboard, the styling. The live feed is not wired up yet.
+
+So for now the board scrolls placeholder text and sample announcements, which is enough to judge the look, the flow and the readability while I work on the backend. It feels alive. That is also the catch. A convincing display of sample data is exactly the sort of thing that can look finished while telling you nothing true, and the work that remains, the live feed, is the work that makes it honest.
+
+The goals were modest and specific:
+
+- Accuracy and speed: near real-time updates, without heavy page loads or awkward refreshes.
+- Local relevance: only my two nearest stations, nothing else.
+- Simplicity: clean, readable information, suited to a small wall-mounted display or a browser tab.
+
+For the look I borrowed from Customer Information Systems, the low-resolution boards you see on platforms, at bus stops and across underground networks. These displays, also called Passenger Information Displays, exist to deliver clear, current information: arrival and departure forecasts, disruption notices, and details such as train formation, the number of coaches, step-free access, and where the first-class coaches sit.
+
+Their bold simplicity is deliberate. A passenger making a fast decision in a busy concourse has to read the board at a glance. I wanted the same clarity, and the same restraint.
+
+## Reflections
+
+There is a particular satisfaction in small projects like this. They are achievable, personal, and quietly meaningful. I did not set out to build a dashboard so much as a small window onto the rhythm of my own street.
+
+It is another instance of calibrated ideas meeting ordinary life, where a piece of technology earns its place by adding to presence rather than demanding attention.
+
+## What's next
+
+Once the live data is flowing, a few directions suggest themselves:
+
+- Getting the live data working at all. That is the current battle, and the honest first task.
+- Station status alerts: short summaries when there is real disruption.
+- A radio link: perhaps feeding the board into Home Assistant alongside my amateur radio dashboard.
+
+For now it scrolls its sample trains, patiently, to nobody. The next departure I am waiting for is the real data.
