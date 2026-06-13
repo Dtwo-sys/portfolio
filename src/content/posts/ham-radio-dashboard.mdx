@@ -1,0 +1,45 @@
+---
+title: 'Building a Ham Radio Dashboard'
+description: 'A lightweight online dashboard that brings live operating conditions, RF propagation and an ISS video feed into a single readable view, adapted for G0IKV from VA3HDL open-source HamDashboard.'
+pubDate: 2025-03-20
+heroImage: '../../assets/images/blog/ham-radio-dashboard/ham-dashboard.jpg'
+heroImageAlt: 'The G0IKV ham radio dashboard: a grid of live panels showing aurora and satellite maps, APRS, lightning and solar weather, an Earth-from-ISS video feed, grey line and an HF propagation conditions table'
+tags: ['radio', 'ham-radio', 'dashboard']
+draft: false
+---
+
+Ham radio has always combined technical ingenuity with a spirit of exploration. After returning to the hobby, I wanted a simple, clear way to monitor activity. The result is a lightweight online dashboard that brings live information together in a single, readable view.
+
+You can see it at [g0ikv.qsy.to](https://g0ikv.qsy.to).
+
+## What it shows
+
+The dashboard gives real-time visibility of the data that matters while operating:
+
+- Stations heard (RX) and stations hearing me (TX)
+- Weather and RF conditions
+- A live video feed from the International Space Station, which adds an extra dimension
+
+The aim was a quick reference tool: immediate feedback on operating conditions, in a display that is good to look at.
+
+I first considered building the system around a Raspberry Pi. While researching options I found an excellent open-source project by VA3HDL, whose HamDashboard provided a robust foundation. I adapted it for use in the UK, modifying the settings to suit my own station, G0IKV, and local needs.
+
+## How it works
+
+The dashboard is built from a series of embedded iframes, each drawing live data from a public online source. The approach has several advantages:
+
+- Minimal server load: there is no need to maintain direct API connections or databases
+- Simple hosting: it can run on lightweight webspace, or even locally
+- Modularity: new sources or views can be added by embedding additional frames
+
+Because it relies on existing, reliable online services, it stays lightweight and avoids unnecessary technical overhead, which suits a personal or small station setup.
+
+## Reflections
+
+Building this dashboard has added a new dimension to my radio activity. Instead of relying on logs alone, I now have a live window into band conditions, propagation patterns and station performance.
+
+The project reflects a wider truth about amateur radio: blending traditional skills with new tools keeps the hobby flexible and always evolving.
+
+Anyone interested in the original project can find [VA3HDL's HamDashboard on GitHub](https://github.com/VA3HDL/hamdashboard). It is an excellent starting point for building your own personalised version.
+
+Thanks to VA3HDL for the inspiration. Radio is better when ideas are shared.
