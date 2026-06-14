@@ -26,7 +26,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         </p>
       </div>
 
-      <nav aria-label="Footer" class="flex flex-col gap-2 text-sm">
+      <nav
+        aria-label="Footer"
+        class="flex flex-wrap gap-x-5 gap-y-2 text-sm sm:flex-col sm:gap-2"
+      >
         {NAV.map((item) => (
           <a href={`${base}${item.href}`} class="text-[var(--fg-soft)] hover:text-[var(--accent)]">
             {item.label}
@@ -34,7 +37,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         ))}
       </nav>
 
-      <div class="flex flex-col gap-2 text-sm">
+      <div class="flex flex-wrap gap-x-5 gap-y-2 text-sm sm:flex-col sm:gap-2">
         {social.map((s) => (
           <a href={s.href} class="text-[var(--fg-soft)] hover:text-[var(--accent)]">
             {s.label}
