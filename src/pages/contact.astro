@@ -1,6 +1,8 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE, SOCIAL } from '../site';
+import coffee from '../assets/images/contact/coffee.jpg';
 const social = SOCIAL.filter((s) => s.href && s.label !== 'Email');
 ---
 
@@ -8,44 +10,116 @@ const social = SOCIAL.filter((s) => s.href && s.label !== 'Email');
   title="Contact"
   description="Get in touch with David Southworth by email at hello@calibratedideas.com."
 >
-  <section class="mx-auto max-w-2xl px-5 py-20">
-    <p class="label-mark">Contact</p>
-    <h1 class="mt-3 text-4xl sm:text-5xl">Say hello</h1>
-    <p class="mt-5 text-lg text-[var(--fg-soft)]">
-      I'm always happy to hear from people working on thoughtful digital, technical or creative
-      projects. If something here sparks an idea, feel free to get in touch.
-    </p>
-    <p class="mt-3 text-lg text-[var(--fg-soft)]">
-      I'm glad to talk about technical writing, calibration-related digital work, training, and
-      cross-disciplinary projects.
-    </p>
+  <section class="mx-auto max-w-5xl px-5 py-16 sm:py-24">
+    <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+      <div class="contact-copy order-2 lg:order-1">
+        <p class="label-mark">Contact</p>
+        <h1 class="mt-3 text-4xl sm:text-5xl">Say hello</h1>
+        <p class="mt-5 text-lg text-[var(--fg-soft)]">
+          I'm always glad to hear from people working on thoughtful digital, technical or creative
+          projects. If something here sparks an idea, let's talk; the best ones often start over a
+          coffee.
+        </p>
+        <p class="mt-3 text-lg text-[var(--fg-soft)]">
+          I'm happy to talk about technical writing, calibration-related digital work, training, and
+          cross-disciplinary projects.
+        </p>
 
-    <a
-      href={`mailto:${SITE.email}`}
-      class="mt-8 inline-block rounded-lg bg-[var(--accent)] px-5 py-3 text-base font-medium text-white transition-opacity hover:opacity-90 dark:text-[#16181a]"
-    >
-      {SITE.email}
-    </a>
+        <a
+          href={`mailto:${SITE.email}`}
+          class="mt-8 inline-block rounded-lg bg-[var(--accent)] px-5 py-3 text-base font-medium text-white transition-opacity hover:opacity-90 dark:text-[#16181a]"
+        >
+          {SITE.email}
+        </a>
 
-    {
-      social.length > 0 && (
-        <div class="mt-10">
-          <p class="label-mark">Elsewhere</p>
-          <ul class="mt-3 flex flex-wrap gap-4">
-            {social.map((s) => (
-              <li>
-                <a href={s.href} class="text-[var(--fg-soft)] hover:text-[var(--accent)]">
-                  {s.label}
-                </a>
-              </li>
-            ))}
-          </ul>
+        {
+          social.length > 0 && (
+            <div class="mt-10">
+              <p class="label-mark">Elsewhere</p>
+              <ul class="mt-3 flex flex-wrap gap-4">
+                {social.map((s) => (
+                  <li>
+                    <a href={s.href} class="text-[var(--fg-soft)] hover:text-[var(--accent)]">
+                      {s.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+
+        <p class="mt-10 text-sm text-[var(--fg-soft)]">
+          No contact form, no newsletter, no tracking. Just email.
+        </p>
+      </div>
+
+      <figure class="contact-photo order-1 m-0 lg:order-2">
+        <div class="overflow-hidden rounded-2xl shadow-xl shadow-black/10 ring-1 ring-[var(--rule)]">
+          <Image
+            src={coffee}
+            alt="A glass of milky coffee on a glazed brown saucer with a teaspoon, on a sunlit terrace table with a hazy coastal view behind"
+            widths={[480, 800, 1200]}
+            sizes="(max-width: 1024px) 100vw, 480px"
+            class="aspect-[4/5] w-full object-cover"
+          />
         </div>
-      )
-    }
-
-    <p class="mt-12 text-sm text-[var(--fg-soft)]">
-      No contact form, no newsletter, no tracking. Just email.
-    </p>
+        <div class="rule-ticks mt-3 opacity-70"></div>
+        <figcaption class="label-mark mt-2">Coffee, with a view.</figcaption>
+      </figure>
+    </div>
   </section>
 </BaseLayout>
+
+<style>
+  /* Motion-safe entrance: a quiet rise on the copy, a soft settle on the
+     photo. Guarded so reduced-motion users (and the global override) simply
+     see everything at rest, never hidden. */
+  @media (prefers-reduced-motion: no-preference) {
+    .contact-copy > * {
+      opacity: 0;
+      animation: contact-rise 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    .contact-copy > *:nth-child(1) {
+      animation-delay: 0.05s;
+    }
+    .contact-copy > *:nth-child(2) {
+      animation-delay: 0.12s;
+    }
+    .contact-copy > *:nth-child(3) {
+      animation-delay: 0.19s;
+    }
+    .contact-copy > *:nth-child(4) {
+      animation-delay: 0.26s;
+    }
+    .contact-copy > *:nth-child(n + 5) {
+      animation-delay: 0.33s;
+    }
+    .contact-photo {
+      opacity: 0;
+      animation: contact-settle 0.75s cubic-bezier(0.4, 0, 0.2, 1) 0.12s forwards;
+    }
+  }
+
+  @keyframes contact-rise {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes contact-settle {
+    from {
+      opacity: 0;
+      transform: scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
