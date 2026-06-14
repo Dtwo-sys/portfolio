@@ -64,6 +64,9 @@ const posts = defineCollection({
       updatedDate: z.coerce.date().optional(),
       heroImage: image().optional(),
       heroImageAlt: z.string().default(''),
+      // YouTube id for video posts. When set, the hero becomes a
+      // click-to-load player (heroImage is its poster); see YouTubeFacade.
+      video: z.string().optional(),
       tags: z.array(z.string()).default([]),
       draft: z.boolean().default(false),
     }),
