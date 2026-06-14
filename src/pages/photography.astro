@@ -1,44 +1,76 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import photo01 from '../assets/images/photography/photo-01.jpg';
-import photo02 from '../assets/images/photography/photo-02.jpg';
-import photo03 from '../assets/images/photography/photo-03.jpg';
-import photo04 from '../assets/images/photography/photo-04.jpg';
-import photo05 from '../assets/images/photography/photo-05.jpg';
-import photo06 from '../assets/images/photography/photo-06.jpg';
-import photo07 from '../assets/images/photography/photo-07.jpg';
+import aerialLakeDusk from '../assets/images/photography/aerial-lake-dusk.jpg';
+import toxtethReservoir from '../assets/images/photography/toxteth-reservoir-lasers.jpg';
+import coastalRocks from '../assets/images/photography/coastal-rocks.jpg';
+import airportWalkway from '../assets/images/photography/airport-walkway.jpg';
+import norwayFjord from '../assets/images/photography/norway-fjord.jpg';
+import redStaircase from '../assets/images/photography/red-staircase.jpg';
+import dunstanburgh from '../assets/images/photography/dunstanburgh-castle.jpg';
+import beachBirds from '../assets/images/photography/beach-birds.jpg';
+import miniatureRailway from '../assets/images/photography/miniature-railway.jpg';
+import shipwreck from '../assets/images/photography/shipwreck.jpg';
 
 const photos = [
   {
-    src: photo01,
-    alt: 'Long pedestrian tunnel with moving walkways, a traveller with a suitcase walking away down the centre under curved white ceiling panels',
+    src: aerialLakeDusk,
+    alt: 'Aerial view at dusk of a lake winding between wooded hills, a path curving through parkland under a pink and grey sunset sky',
   },
   {
-    src: photo02,
-    alt: 'Waves breaking over dark rocks on a rugged shoreline under a heavy grey-blue sky',
-  },
-  {
-    src: photo03,
+    src: toxtethReservoir,
     alt: "Green laser beams criss-crossing between cast-iron columns in the dark interior of Toxteth Reservoir, part of Rita McBride's installation",
   },
   {
-    src: photo04,
-    alt: 'Miniature railway wagon beside a leaf-strewn path, with an arched viaduct and a golden autumn sunset behind the trees',
+    src: coastalRocks,
+    alt: 'Waves breaking beyond a rugged, lichen-covered rocky shoreline under a heavy grey-blue sky, with green weed in a foreground pool',
   },
   {
-    src: photo05,
-    alt: 'Aerial view at dusk of a lake winding between wooded hills, with a path curving through parkland in the foreground',
+    src: airportWalkway,
+    alt: 'A long airport pedestrian tunnel lined with moving walkways and mirrored panels, travellers passing beneath a curved white ceiling',
   },
   {
-    src: photo06,
-    alt: 'Staircase sculpted in translucent red fabric, suspended beneath a gallery ceiling and lit from above',
+    src: norwayFjord,
+    alt: 'A calm Norwegian fjord, turquoise water mirroring clouds and forested mountainsides under low, drifting cloud',
   },
   {
-    src: photo07,
-    alt: 'Weathered wooden ribs of an old shipwreck emerging from wet sand at low tide, under a pale overcast sky',
+    src: redStaircase,
+    alt: 'A staircase sculpted in translucent red fabric, suspended beneath a gallery ceiling and lit from above',
+  },
+  {
+    src: dunstanburgh,
+    alt: 'The ruins of Dunstanburgh Castle on a low headland, seen across a rocky shore with a still tidal pool reflecting the sky',
+  },
+  {
+    src: beachBirds,
+    alt: 'A tractor crossing a vast wet beach at low tide, a large flock of birds wheeling overhead and offshore wind turbines on the horizon',
+  },
+  {
+    src: miniatureRailway,
+    alt: 'A miniature railway wagon beside a leaf-strewn path, with an arched viaduct and a golden autumn sunset behind bare trees',
+  },
+  {
+    src: shipwreck,
+    alt: 'The weathered wooden ribs of an old shipwreck emerging from wet sand at low tide, under a pale overcast sky',
   },
 ];
+
+// A larger version of each photo for the lightbox. Generated as WebP and
+// only requested by the browser when a thumbnail is clicked (the URL sits
+// in a data attribute), so the grid stays light. Width is capped at the
+// original so nothing is upscaled.
+const photosWithFull = await Promise.all(
+  photos.map(async (photo) => ({
+    ...photo,
+    full: (
+      await getImage({
+        src: photo.src,
+        width: Math.min(1800, photo.src.width),
+        format: 'webp',
+      })
+    ).src,
+  })),
+);
 ---
 
 <BaseLayout
@@ -63,19 +95,112 @@ const photos = [
 
     <div class="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3">
       {
-        photos.map((photo) => (
-          <div class="overflow-hidden rounded-lg bg-[var(--bg-soft)] aspect-square">
+        photosWithFull.map((photo) => (
+          <button
+            type="button"
+            class="photo-trigger group aspect-square cursor-zoom-in overflow-hidden rounded-lg bg-[var(--bg-soft)]"
+            data-full={photo.full}
+            data-alt={photo.alt}
+          >
             <Image
               src={photo.src}
               alt={photo.alt}
               widths={[400, 800]}
               sizes="(max-width: 640px) 50vw, 360px"
-              class="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.04]"
+              class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
             />
-          </div>
+          </button>
         ))
       }
     </div>
-
   </section>
+
+  {/* Lightbox: native <dialog> for free focus trap and Esc-to-close. The
+      full image src is set on click, so nothing large loads until then. */}
+  <dialog class="lightbox" aria-label="Photograph, full size">
+    <button type="button" class="lightbox-close" aria-label="Close">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" />
+      </svg>
+    </button>
+    <img class="lightbox-img" alt="" />
+  </dialog>
 </BaseLayout>
+
+<style>
+  .lightbox {
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
+    border: 0;
+    padding: clamp(0.75rem, 3vw, 2.5rem);
+    background: transparent;
+    overflow: hidden;
+  }
+  .lightbox:not([open]) {
+    display: none;
+  }
+  .lightbox[open] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lightbox::backdrop {
+    background: rgb(10 10 12 / 0.92);
+  }
+  .lightbox-img {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 0.5rem;
+  }
+  .lightbox-close {
+    position: fixed;
+    top: clamp(0.5rem, 2vw, 1.25rem);
+    right: clamp(0.5rem, 2vw, 1.25rem);
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    color: #f5f2ec;
+    background: rgb(2 38 93 / 0.78);
+    border: 0;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: background-color 0.18s ease;
+  }
+  .lightbox-close:hover,
+  .lightbox-close:focus-visible {
+    background: rgb(2 38 93 / 0.95);
+  }
+</style>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('.lightbox');
+  const img = dialog?.querySelector<HTMLImageElement>('.lightbox-img');
+  const closeBtn = dialog?.querySelector<HTMLButtonElement>('.lightbox-close');
+
+  if (dialog && img) {
+    for (const btn of document.querySelectorAll<HTMLButtonElement>('.photo-trigger')) {
+      btn.addEventListener('click', () => {
+        img.src = btn.dataset.full ?? '';
+        img.alt = btn.dataset.alt ?? '';
+        dialog.showModal();
+      });
+    }
+    closeBtn?.addEventListener('click', () => dialog.close());
+    // Click outside the image (on the dialog padding/backdrop area) closes.
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+    // Drop the source on close so the large image can be freed.
+    dialog.addEventListener('close', () => {
+      img.removeAttribute('src');
+    });
+  }
+</script>
