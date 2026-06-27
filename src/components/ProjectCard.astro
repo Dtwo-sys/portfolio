@@ -37,14 +37,12 @@ const tags = data.categories.slice(0, 3);
           </div>
         )
       }
-      <span class="label-mark absolute left-3 top-3 rounded bg-[var(--bg)]/85 px-2 py-1">
-        {data.year}
-      </span>
     </div>
 
     <div class="flex flex-1 flex-col gap-2 p-5">
       <div class="flex items-baseline justify-between gap-3">
         <Heading class="font-display text-xl group-hover:text-[var(--accent)]">{data.title}</Heading>
+        <span class="label-mark shrink-0">{data.year}</span>
       </div>
       <p class="label-mark">{data.type}</p>
       <p class="text-sm text-[var(--fg-soft)]">{data.summary}</p>
