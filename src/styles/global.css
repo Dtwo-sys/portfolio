@@ -1,11 +1,13 @@
 /*
   Calibrated Ideas — global styles and design tokens.
 
-  Visual identity (brief.md Section 7): evolves away from the old navy/gold.
+  Visual identity:
   - Warm monochrome base: "paper" off-white + "ink" graphite, warm undertone.
-  - One accent: "tide" sea-glass teal — an instrument-readout colour for the
-    precision side, a calm coastal tone for the creative side (poetry, the
-    Northumberland photography, Between the Waves).
+  - Two coordinated accents, both drawn from the D2 mark: deep navy (the
+    mark's ink) and sandstone gold (the mark's "2"). Navy is the interactive
+    colour on light surfaces; on charcoal it is illegible, so the interactive
+    colour becomes gold there, while gold also serves as the warm highlight
+    (link hover underline, the major ticks in the rule motif) throughout.
   - Fine measurement-line accents and graph-paper motifs via utilities below.
 
   Type: Fraunces (display serif), IBM Plex Sans (body), IBM Plex Mono
@@ -29,12 +31,12 @@
   /* Fine grid / measurement-line colour */
   --color-line: #d8d2c4;
 
-  /* --- Accent: tide (sea-glass teal) --- */
-  /* tide-600 meets WCAG AA for body text on paper. */
-  --color-tide-300: #7fd0c6;
-  --color-tide-500: #2a9d8f;
-  --color-tide-600: #1f7d72;
-  --color-tide-700: #16615a;
+  /* --- Brand accents, both drawn from the D2 mark --- */
+  /* Deep navy (the mark's ink) and sandstone gold (the mark's "2"). One
+     coordinated pair carries every interactive and highlight role, so the
+     accent system reads as chosen rather than bolted on. */
+  --color-navy: #02265d;
+  --color-gold: #cda37d;
 
   /* --- Dark surfaces --- */
   --color-night: #16181a;
@@ -56,7 +58,11 @@
   --fg: var(--color-ink);
   --fg-soft: var(--color-ink-soft);
   --rule: var(--color-line);
-  --accent: var(--color-tide-600);
+  /* Interactive colour: the mark's navy on light surfaces. */
+  --accent: var(--color-navy);
+  /* Warm highlight: sandstone gold, used for the link hover underline and the
+     major ticks in the rule motif. */
+  --highlight: var(--color-gold);
   --muted: var(--color-muted);
   /* Brand-mark ink (the D2 logo SVG reads this). Sampled from the original
      raster lockups: deep navy on light surfaces, lifted navy on dark. */
@@ -71,7 +77,10 @@
   --fg: var(--color-paper);
   --fg-soft: #c8c4ba;
   --rule: #34373a;
-  --accent: var(--color-tide-300);
+  /* On charcoal the navy is illegible, so the interactive colour becomes the
+     mark's gold (8:1 on the night surface). Navy recedes to the logo. */
+  --accent: var(--color-gold);
+  --highlight: var(--color-gold);
   /* Lighter muted tone: #6b6c66 fails WCAG AA on the night surface. */
   --muted: #9a9c94;
   --d2-ink: #123a73;
@@ -169,16 +178,26 @@ h4 {
   }
 }
 
-/* Calibration tick rule: a horizontal scale of fine ticks. */
+/* Calibration tick rule: a horizontal scale of fine ticks, with a sandstone
+   "major" tick every tenth division so the warm highlight recurs in the
+   measurement motif rather than only on the mark. */
 .rule-ticks {
   height: 12px;
-  background-image: repeating-linear-gradient(
-    to right,
-    var(--rule) 0,
-    var(--rule) 1px,
-    transparent 1px,
-    transparent 10px
-  );
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      var(--highlight) 0,
+      var(--highlight) 1px,
+      transparent 1px,
+      transparent 100px
+    ),
+    repeating-linear-gradient(
+      to right,
+      var(--rule) 0,
+      var(--rule) 1px,
+      transparent 1px,
+      transparent 10px
+    );
 }
 
 /* --- Motion: one reusable scroll reveal -------------------------------- */
@@ -259,7 +278,12 @@ h4 {
 .prose-cal a {
   color: var(--accent);
   text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
   text-underline-offset: 2px;
+  transition: text-decoration-color 0.2s var(--ease-out);
+}
+.prose-cal a:hover {
+  text-decoration-color: var(--highlight);
 }
 .prose-cal blockquote {
   border-left: 3px solid var(--accent);
