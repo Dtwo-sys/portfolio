@@ -84,6 +84,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           widths={[400, 800]}
           sizes="(max-width: 640px) 100vw, 360px"
           class="w-full rounded-xl"
+          data-reveal="zoom"
         />
         <Image
           src={publishedMetrology}
@@ -91,6 +92,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           widths={[400, 800]}
           sizes="(max-width: 640px) 100vw, 360px"
           class="w-full rounded-xl"
+          data-reveal="zoom"
+          style="--reveal-delay: 90ms"
         />
       </div>
     </div>

@@ -19,10 +19,22 @@ imageAlt: 'Northumberland coast, the landscape behind Between the Waves'
 
 import { Image } from 'astro:assets';
 import featuresImg from '../../assets/images/projects/between-the-waves/features.jpg';
+import benchImg from '../../assets/images/projects/between-the-waves/on-the-bench.jpg';
 
 ## Context
 
 Between the Waves came out of a long mindfulness practice and counselling training. The aim was a meditation app with nothing in the way: no account to create, no subscription to weigh up, no tracking running quietly underneath. You open it and you press play.
+
+<div class="not-prose my-10 flex justify-center">
+  <Image
+    src={benchImg}
+    alt="The Between the Waves app open on a phone resting on a weathered wooden bench carved with the words 'Sit a while', among sunlit summer grass"
+    widths={[400, 640]}
+    sizes="(max-width: 640px) 100vw, 460px"
+    class="w-full max-w-md rounded-xl shadow-lg"
+    data-reveal="zoom"
+  />
+</div>
 
 ## What I built
 
