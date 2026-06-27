@@ -79,15 +79,45 @@ const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).href : undefined;
     <!-- Per-page head additions, e.g. JSON-LD structured data. -->
     <slot name="head" />
 
-    <!-- Set theme before paint to avoid a flash. No tracking. -->
+    <!-- Set theme before paint, and arm the scroll reveals. Inline (never a
+         separate request) so it cannot fail to load on its own: if this runs,
+         reveals work; if it does not, nothing is ever left hidden. No tracking. -->
     <script is:inline>
       (() => {
+        const root = document.documentElement;
         try {
-          const stored = localStorage.getItem('theme');
-          if (stored === 'dark') {
-            document.documentElement.classList.add('dark');
-          }
+          if (localStorage.getItem('theme') === 'dark') root.classList.add('dark');
         } catch (e) {}
+
+        // Enable the hidden reveal start states only now that JS is running.
+        root.classList.add('js');
+
+        const arm = () => {
+          const els = document.querySelectorAll('[data-reveal]');
+          const motionOk = matchMedia('(prefers-reduced-motion: no-preference)').matches;
+          if (!motionOk || !('IntersectionObserver' in window)) {
+            els.forEach((el) => el.classList.add('is-revealed'));
+            return;
+          }
+          const io = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add('is-revealed');
+                  io.unobserve(entry.target);
+                }
+              });
+            },
+            { rootMargin: '0px 0px -8% 0px', threshold: 0.1 }
+          );
+          els.forEach((el) => io.observe(el));
+        };
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', arm);
+        } else {
+          arm();
+        }
       })();
     </script>
   </head>

@@ -70,7 +70,7 @@ const projectSchema = data.links.appStore
           data.links.live && (
             <a
               href={data.links.live}
-              class="inline-flex items-center gap-2 rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 dark:text-[#16181a]"
+              class="inline-flex items-center gap-2 rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white transition-[transform,opacity] hover:-translate-y-px hover:opacity-90 dark:text-[#16181a]"
             >
               Visit {data.title} &rarr;
             </a>
@@ -110,6 +110,7 @@ const projectSchema = data.links.appStore
               widths={[240, 480]}
               sizes="(max-width: 640px) 45vw, 240px"
               class="rounded-xl border border-[var(--rule)]"
+              data-reveal="zoom"
             />
           ))}
         </section>

@@ -33,7 +33,7 @@ const featured = projects
           <div class="mt-8 flex flex-wrap gap-3">
             <a
               href={`${base}/projects/`}
-              class="rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 dark:text-[#16181a]"
+              class="rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white transition-[transform,opacity] hover:-translate-y-px hover:opacity-90 dark:text-[#16181a]"
             >
               View projects
             </a>
@@ -64,7 +64,13 @@ const featured = projects
       <a href={`${base}/projects/`} class="label-mark hover:text-[var(--accent)]">All projects &rarr;</a>
     </div>
     <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {featured.map((project) => <ProjectCard project={project} />)}
+      {
+        featured.map((project, i) => (
+          <div data-reveal style={`--reveal-delay: ${i * 50}ms`}>
+            <ProjectCard project={project} />
+          </div>
+        ))
+      }
     </div>
   </section>
 

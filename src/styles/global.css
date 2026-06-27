@@ -61,6 +61,8 @@
   /* Brand-mark ink (the D2 logo SVG reads this). Sampled from the original
      raster lockups: deep navy on light surfaces, lifted navy on dark. */
   --d2-ink: #02265d;
+  /* Shared easing for interaction and reveal motion. */
+  --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dark {
@@ -177,6 +179,57 @@ h4 {
     transparent 1px,
     transparent 10px
   );
+}
+
+/* --- Motion: one reusable scroll reveal -------------------------------- */
+/*
+  Quiet entrance: a gentle rise + fade (or subtle scale for screenshots),
+  triggered by IntersectionObserver. Fail visible by design: the hidden start
+  state exists only when JS has run (.js on <html>) AND motion is welcome.
+  No JS, a JS failure, or prefers-reduced-motion leaves every element in its
+  final, fully visible state. Only transform and opacity are animated.
+*/
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 0.6s var(--ease-out),
+      transform 0.6s var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .js [data-reveal='zoom'] {
+    transform: scale(0.98);
+  }
+  .js [data-reveal].is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Project card: the existing hover/focus lift gains a soft shadow that fades
+   in. Only opacity animates (compositor-friendly); the shadow layer sits on
+   this outer wrapper, so the card's own overflow-hidden never clips it. */
+.project-card {
+  position: relative;
+}
+.project-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 0.5rem; /* matches the card's rounded-lg */
+  box-shadow: 0 14px 30px -12px rgb(0 0 0 / 0.22);
+  opacity: 0;
+  transition: opacity 0.28s var(--ease-out);
+  pointer-events: none;
+}
+.project-card:hover::after,
+.project-card:focus-within::after {
+  opacity: 1;
+}
+.dark .project-card::after {
+  box-shadow: 0 14px 30px -12px rgb(0 0 0 / 0.55);
 }
 
 /* --- Prose: shared styling for MDX bodies and long-form pages --- */
