@@ -1,12 +1,23 @@
 ---
 import '../styles/global.css';
-// Self-hosted fonts (no third-party CDN — privacy ethos, brief §2/§11).
-import '@fontsource-variable/fraunces';
-import '@fontsource/ibm-plex-sans/400.css';
-import '@fontsource/ibm-plex-sans/500.css';
-import '@fontsource/ibm-plex-sans/600.css';
-import '@fontsource/ibm-plex-mono/400.css';
-import '@fontsource/ibm-plex-mono/500.css';
+// Self-hosted fonts: latin-only @font-face built from the Fontsource woff2
+// files (no font CDN; only the latin subset and the weights/axes we use are
+// shipped). Newsreader (variable opsz + wght, with true italic) for display
+// and reading; IBM Plex Sans (variable) for UI; IBM Plex Mono for labels.
+// `?url` resolves each to its hashed, base-path-correct build URL.
+import newsreaderNormal from '@fontsource-variable/newsreader/files/newsreader-latin-opsz-normal.woff2?url';
+import newsreaderItalic from '@fontsource-variable/newsreader/files/newsreader-latin-opsz-italic.woff2?url';
+import plexSans from '@fontsource-variable/ibm-plex-sans/files/ibm-plex-sans-latin-wght-normal.woff2?url';
+import plexMono from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url';
+
+// Standard latin subset range (Fontsource): gates download to latin content.
+const latin =
+  'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD';
+const fontFaces = `
+@font-face{font-family:'Newsreader Variable';font-style:normal;font-weight:200 800;font-display:swap;src:url(${newsreaderNormal}) format('woff2');unicode-range:${latin};}
+@font-face{font-family:'Newsreader Variable';font-style:italic;font-weight:200 800;font-display:swap;src:url(${newsreaderItalic}) format('woff2');unicode-range:${latin};}
+@font-face{font-family:'IBM Plex Sans Variable';font-style:normal;font-weight:100 700;font-display:swap;src:url(${plexSans}) format('woff2');unicode-range:${latin};}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:400;font-display:swap;src:url(${plexMono}) format('woff2');unicode-range:${latin};}`;
 
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -41,6 +52,11 @@ const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).href : undefined;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* Latin-only @font-face, then preload the two faces that paint above the
+        fold (reading/display serif + UI sans) so the swap is near-invisible. */}
+    <style is:global set:html={fontFaces}></style>
+    <link rel="preload" href={newsreaderNormal} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={plexSans} as="font" type="font/woff2" crossorigin />
     <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
     <link rel="icon" href={`${base}/favicon.ico`} sizes="32x32" />
     <link rel="icon" href={`${base}/favicon-16x16.png`} type="image/png" sizes="16x16" />
