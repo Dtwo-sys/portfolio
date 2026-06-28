@@ -23,7 +23,7 @@ const featured = projects
       <div class="flex flex-col-reverse items-center gap-12 sm:flex-row sm:items-center sm:justify-between">
         <div class="flex-1">
           <p class="label-mark">Exact things, inexact things, and the gap between them.</p>
-          <h1 class="mt-4 max-w-2xl text-4xl leading-tight sm:text-6xl">
+          <h1 class="mt-4 max-w-2xl text-[length:var(--step-5)]">
             Digital projects, technical writing and creative tools, made with precision and presence.
           </h1>
           <p class="mt-6 max-w-xl text-lg text-[var(--fg-soft)]">
@@ -33,13 +33,13 @@ const featured = projects
           <div class="mt-8 flex flex-wrap gap-3">
             <a
               href={`${base}/projects/`}
-              class="rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white transition-[transform,opacity] hover:-translate-y-px hover:opacity-90 dark:text-[#16181a]"
+              class="rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-medium font-[family-name:var(--font-ui)] text-white transition-[transform,opacity] hover:-translate-y-px hover:opacity-90 dark:text-[#16181a]"
             >
               View projects
             </a>
             <a
               href={`${base}/about/`}
-              class="rounded-lg border border-[var(--rule)] px-5 py-2.5 text-sm font-medium transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+              class="rounded-lg border border-[var(--rule)] px-5 py-2.5 text-sm font-medium font-[family-name:var(--font-ui)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
             >
               Read about me
             </a>
@@ -60,7 +60,7 @@ const featured = projects
   <!-- Featured projects -->
   <section class="mx-auto max-w-5xl px-5 py-16">
     <div class="flex items-baseline justify-between">
-      <h2 class="text-2xl sm:text-3xl">Featured work</h2>
+      <h2>Featured work</h2>
       <a href={`${base}/projects/`} class="label-mark hover:text-[var(--accent)]">All projects &rarr;</a>
     </div>
     <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -77,7 +77,7 @@ const featured = projects
   <!-- What connects the work -->
   <section class="border-y border-[var(--rule)] bg-[var(--bg-soft)]">
     <div class="mx-auto max-w-3xl px-5 py-16">
-      <h2 class="text-2xl sm:text-3xl">What connects the work</h2>
+      <h2>What connects the work</h2>
       <p class="mt-5 text-lg text-[var(--fg-soft)]">
         Precision measurement, technical writing, AI-assisted tools, web and mobile development,
         training and creative practice are not separate strands. They share one habit: paying close
@@ -93,14 +93,14 @@ const featured = projects
 
   <!-- Contact strip -->
   <section class="mx-auto max-w-3xl px-5 py-16 text-center">
-    <h2 class="text-2xl sm:text-3xl">Get in touch</h2>
+    <h2>Get in touch</h2>
     <p class="mx-auto mt-4 max-w-xl text-lg text-[var(--fg-soft)]">
       I'm always happy to hear from people working on thoughtful digital, technical or creative
       projects. If something here sparks an idea, feel free to get in touch.
     </p>
     <a
       href={`mailto:${SITE.email}`}
-      class="mt-6 inline-block rounded-lg border border-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent)] transition-colors hover:bg-[var(--accent)] hover:text-white dark:hover:text-[#16181a]"
+      class="mt-6 inline-block rounded-lg border border-[var(--accent)] px-5 py-2.5 text-sm font-medium font-[family-name:var(--font-ui)] text-[var(--accent)] transition-colors hover:bg-[var(--accent)] hover:text-white dark:hover:text-[#16181a]"
     >
       {SITE.email}
     </a>

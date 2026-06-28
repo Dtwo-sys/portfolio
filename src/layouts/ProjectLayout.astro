@@ -62,7 +62,7 @@ const projectSchema = data.links.appStore
         <span class="label-mark">{data.year}</span>
         <span class="label-mark">{data.status}</span>
       </div>
-      <h1 class="mt-3 text-4xl sm:text-5xl">{data.title}</h1>
+      <h1 class="mt-3">{data.title}</h1>
       <p class="mt-4 text-lg text-[var(--fg-soft)]">{data.summary}</p>
 
       <div class="mt-6 flex flex-wrap items-center gap-3">
@@ -70,7 +70,7 @@ const projectSchema = data.links.appStore
           data.links.live && (
             <a
               href={data.links.live}
-              class="inline-flex items-center gap-2 rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white transition-[transform,opacity] hover:-translate-y-px hover:opacity-90 dark:text-[#16181a]"
+              class="inline-flex items-center gap-2 rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-medium font-[family-name:var(--font-ui)] text-white transition-[transform,opacity] hover:-translate-y-px hover:opacity-90 dark:text-[#16181a]"
             >
               Visit {data.title} &rarr;
             </a>
@@ -142,12 +142,12 @@ const projectSchema = data.links.appStore
 <style is:global>
   /* Lightweight prose styling for MDX case-study bodies. */
   .prose-cal h2 {
-    font-size: 1.5rem;
+    font-size: var(--step-2);
     margin-top: 2.25rem;
     margin-bottom: 0.5rem;
   }
   .prose-cal h3 {
-    font-size: 1.2rem;
+    font-size: var(--step-1);
     margin-top: 1.75rem;
     margin-bottom: 0.4rem;
   }

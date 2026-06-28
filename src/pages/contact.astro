@@ -14,7 +14,7 @@ const social = SOCIAL.filter((s) => s.href && s.label !== 'Email');
     <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
       <div class="contact-copy order-2 lg:order-1">
         <p class="label-mark">Contact</p>
-        <h1 class="mt-3 text-4xl sm:text-5xl">Say hello</h1>
+        <h1 class="mt-3">Say hello</h1>
         <p class="mt-5 text-lg text-[var(--fg-soft)]">
           I'm always glad to hear from people working on thoughtful digital, technical or creative
           projects. If something here sparks an idea, let's talk; the best ones often start over a
@@ -27,7 +27,7 @@ const social = SOCIAL.filter((s) => s.href && s.label !== 'Email');
 
         <a
           href={`mailto:${SITE.email}`}
-          class="mt-8 inline-block rounded-lg bg-[var(--accent)] px-5 py-3 text-base font-medium text-white transition-opacity hover:opacity-90 dark:text-[#16181a]"
+          class="mt-8 inline-block rounded-lg bg-[var(--accent)] px-5 py-3 text-base font-medium font-[family-name:var(--font-ui)] text-white transition-opacity hover:opacity-90 dark:text-[#16181a]"
         >
           {SITE.email}
         </a>
