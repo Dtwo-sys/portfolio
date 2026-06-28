@@ -16,6 +16,12 @@
   pause control (WCAG 2.2.2), and renders a single perfectly calibrated
   still under prefers-reduced-motion.
 */
+interface Props {
+  /** Show the built-in caption strip. The home signature panel hides it
+      and supplies its own linked caption. */
+  showCaption?: boolean;
+}
+const { showCaption = true } = Astro.props;
 ---
 
 <figure
@@ -37,13 +43,15 @@
   >
     Pause
   </button>
-  <figcaption
-    class="label-mark border-t border-[var(--rule)] bg-[var(--bg-soft)] px-4 py-2.5"
-  >
-    Calibrated Ideas in Motion
-    <br />
-    <span class="text-[0.75em] opacity-60">© 2026 David Southworth</span>
-  </figcaption>
+  {
+    showCaption && (
+      <figcaption class="label-mark border-t border-[var(--rule)] bg-[var(--bg-soft)] px-4 py-2.5">
+        Calibrated Ideas in Motion
+        <br />
+        <span class="text-[0.75em] opacity-60">© 2026 David Southworth</span>
+      </figcaption>
+    )
+  }
 </figure>
 
 <style>

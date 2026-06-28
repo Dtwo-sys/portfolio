@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import D2Mark from '../components/D2Mark.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import CalibrationFigure from '../components/CalibrationFigure.astro';
 import Schema from '../components/Schema.astro';
 import { SITE, personSchema } from '../site';
 
@@ -74,6 +75,20 @@ const featured = projects
     </div>
   </section>
 
+  <!-- Signature: the calibration dial in motion, a route to About -->
+  <section class="signature-panel border-y border-[var(--rule)] bg-[#16181a]">
+    <div class="relative mx-auto max-w-5xl px-5 py-16">
+      <CalibrationFigure showCaption={false} />
+      <a
+        href={`${base}/about/`}
+        class="signature-link group label-mark mt-5 inline-flex items-center gap-1.5 text-[#c8c4ba] transition-colors hover:text-[#f5f2ec]"
+      >
+        Calibrated Ideas in motion
+        <span aria-hidden="true" class="transition-transform group-hover:translate-x-0.5">&rarr;</span>
+      </a>
+    </div>
+  </section>
+
   <!-- What connects the work -->
   <section class="border-y border-[var(--rule)] bg-[var(--bg-soft)]">
     <div class="mx-auto max-w-3xl px-5 py-16">
@@ -107,3 +122,17 @@ const featured = projects
   </section>
 
 </BaseLayout>
+
+<style>
+  /* Whole panel links to About (stretched link), but the dial's Pause
+     control stays clickable above the link overlay. */
+  .signature-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .signature-panel :global(.cal-toggle) {
+    z-index: 2;
+  }
+</style>
